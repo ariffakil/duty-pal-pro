@@ -2,6 +2,8 @@ import { useEffect, useRef, useState } from "react";
 import { X, Send, Mic, Square, Languages, Check } from "lucide-react";
 
 import { NovaMascot } from "@/components/att/NovaMascot";
+import novaAvatar from "@/assets/nova-avatar.png.asset.json";
+
 
 import { useSpeechInput } from "@/hooks/useSpeechInput";
 import { NOVA_LANGS, useNovaLang } from "@/lib/novaLang";
@@ -112,19 +114,69 @@ export function NovaChat({
     if (voice.supported) voice.start();
   };
 
+  // Draggable Nova launcher (mouse / touch).
+  const dragRef = useRef<HTMLDivElement | null>(null);
+  const movedRef = useRef(false);
+  const [pos, setPos] = useState({ right: 20, bottom: 20 });
+
+  const onPointerDown = (e: React.PointerEvent) => {
+    const el = dragRef.current;
+    if (!el) return;
+    movedRef.current = false;
+    const startX = e.clientX;
+    const startY = e.clientY;
+    const start = { ...pos };
+    const parent = el.parentElement?.getBoundingClientRect();
+
+    const move = (ev: PointerEvent) => {
+      const dx = startX - ev.clientX;
+      const dy = startY - ev.clientY;
+      if (Math.abs(dx) > 3 || Math.abs(dy) > 3) movedRef.current = true;
+      const maxR = parent ? parent.width - 88 : 300;
+      const maxB = parent ? parent.height - 88 : 600;
+      setPos({
+        right: Math.min(Math.max(start.right + dx, 4), Math.max(4, maxR)),
+        bottom: Math.min(Math.max(start.bottom + dy, 4), Math.max(4, maxB)),
+      });
+    };
+    const up = () => {
+      window.removeEventListener("pointermove", move);
+      window.removeEventListener("pointerup", up);
+      setTimeout(() => (movedRef.current = false), 50);
+    };
+    window.addEventListener("pointermove", move);
+    window.addEventListener("pointerup", up);
+  };
+
+
   return (
     <>
       {!open && (
-        <button
-          onClick={openChat}
-          aria-label="Ask Nova by voice or text"
-          className="absolute bottom-5 right-5 z-20 flex h-16 w-16 items-center justify-center rounded-full"
-          style={{ backgroundImage: "var(--gradient-aurora)", boxShadow: "var(--shadow-glow)" }}
+        <div
+          ref={dragRef}
+          onPointerDown={onPointerDown}
+          style={{ right: pos.right, bottom: pos.bottom, touchAction: "none" }}
+          className="absolute z-20 cursor-grab active:cursor-grabbing select-none"
         >
-          <NovaMascot className="h-12 w-12 animate-float-soft drop-shadow" />
-          <span className="absolute -top-0.5 -right-0.5 h-3 w-3 rounded-full bg-success ring-2 ring-background" />
-        </button>
+          <button
+            onClick={() => {
+              if (movedRef.current) return;
+              openChat();
+            }}
+            aria-label="Ask Nova by voice or text"
+            className="relative flex h-20 w-20 items-center justify-center"
+          >
+            <img
+              src={novaAvatar.url}
+              alt="Nova AI assistant"
+              draggable={false}
+              className="h-20 w-20 animate-float-soft object-contain drop-shadow-[0_10px_24px_rgba(0,0,0,0.45)]"
+            />
+            <span className="absolute right-2 top-2 h-3 w-3 rounded-full bg-success ring-2 ring-background" />
+          </button>
+        </div>
       )}
+
 
 
       {open && (
