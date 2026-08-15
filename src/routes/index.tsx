@@ -132,10 +132,21 @@ function Index() {
     s: Math.floor((leftMs % 60_000) / 1000),
   };
 
-  // Auto-close the verification popup once Nova finishes speaking.
+  // Total worked for the day.
+  const workedMs =
+    clockInAt && actualOutAt ? Math.max(0, actualOutAt.getTime() - clockInAt.getTime()) : 0;
+  const workedText = `${String(Math.floor(workedMs / 3600_000)).padStart(2, "0")}h ${String(
+    Math.floor((workedMs % 3600_000) / 60_000),
+  ).padStart(2, "0")}m`;
+  const overtimeMs = Math.max(0, workedMs - SHIFT_HOURS * 3600_000);
+  const overtimeText = `${String(Math.floor(overtimeMs / 3600_000)).padStart(2, "0")}h ${String(
+    Math.floor((overtimeMs % 3600_000) / 60_000),
+  ).padStart(2, "0")}m`;
+
+  // Auto-close verification / day-summary popups once Nova finishes speaking.
   const spokeRef = useRef(false);
   useEffect(() => {
-    if (stage !== "verified") {
+    if (stage !== "verified" && stage !== "summary") {
       spokeRef.current = false;
       return;
     }
@@ -143,9 +154,11 @@ function Index() {
       spokeRef.current = true;
       return;
     }
-    const t = setTimeout(() => setStage("day"), spokeRef.current ? 900 : 5000);
+    const next = stage === "verified" ? "day" : "idle";
+    const t = setTimeout(() => setStage(next), spokeRef.current ? 1200 : 6000);
     return () => clearTimeout(t);
   }, [stage, speaking]);
+
 
   useEffect(() => {
     if (stage !== "day") return;
