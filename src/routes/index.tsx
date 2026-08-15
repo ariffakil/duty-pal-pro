@@ -1,6 +1,7 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { Bell, ChevronLeft, Shield, Wifi } from "lucide-react";
+import { Bell, ChevronLeft, Shield, ShieldCheck, Wifi } from "lucide-react";
+
 
 import { FaceScan } from "@/components/att/FaceScan";
 import { AttendanceResult } from "@/components/att/AttendanceResult";
@@ -151,6 +152,13 @@ function Index() {
               </div>
             ))}
           </dl>
+          <Link
+            to="/admin"
+            className="mt-8 inline-flex items-center gap-2 rounded-xl border border-border bg-secondary/50 px-4 py-2.5 text-sm font-semibold transition-colors hover:text-primary"
+          >
+            <ShieldCheck className="h-4 w-4 text-primary" /> Open admin console
+          </Link>
+
         </section>
 
         <section className="relative">
