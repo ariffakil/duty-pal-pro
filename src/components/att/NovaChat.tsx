@@ -115,16 +115,31 @@ export function NovaChat({
   return (
     <>
       {!open && (
-        <button
-          onClick={openChat}
-          aria-label="Ask Nova by voice or text"
-          className="absolute bottom-5 right-5 z-20 flex h-16 w-16 items-center justify-center rounded-full"
-          style={{ backgroundImage: "var(--gradient-aurora)", boxShadow: "var(--shadow-glow)" }}
+        <div
+          ref={dragRef}
+          onPointerDown={onPointerDown}
+          style={{ right: pos.right, bottom: pos.bottom, touchAction: "none" }}
+          className="absolute z-20 cursor-grab active:cursor-grabbing select-none"
         >
-          <NovaMascot className="h-12 w-12 animate-float-soft drop-shadow" />
-          <span className="absolute -top-0.5 -right-0.5 h-3 w-3 rounded-full bg-success ring-2 ring-background" />
-        </button>
+          <button
+            onClick={() => {
+              if (movedRef.current) return;
+              openChat();
+            }}
+            aria-label="Ask Nova by voice or text"
+            className="relative flex h-20 w-20 items-center justify-center"
+          >
+            <img
+              src={novaAvatar.url}
+              alt="Nova AI assistant"
+              draggable={false}
+              className="h-20 w-20 animate-float-soft object-contain drop-shadow-[0_10px_24px_rgba(0,0,0,0.45)]"
+            />
+            <span className="absolute right-2 top-2 h-3 w-3 rounded-full bg-success ring-2 ring-background" />
+          </button>
+        </div>
       )}
+
 
 
       {open && (
