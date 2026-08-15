@@ -1,4 +1,5 @@
 import { LogIn, LogOut, MapPin, Coffee, CalendarDays, Fingerprint } from "lucide-react";
+import { FaceTouch } from "./FaceTouch";
 
 type Props = {
   clockIn: string;
@@ -113,13 +114,20 @@ export function ShiftDashboard({
         ))}
       </div>
 
-      <button
-        onClick={onClockOut}
-        disabled={clockedOut}
-        className="mt-4 w-full rounded-2xl border border-border bg-secondary/60 px-6 py-4 text-base font-semibold transition-colors disabled:opacity-50 active:scale-[0.98]"
-      >
-        {clockedOut ? "Shift completed" : "Face scan to clock out"}
-      </button>
+      <div className="mt-6 flex flex-col items-center">
+        {clockedOut ? (
+          <p className="rounded-2xl bg-success/15 px-6 py-4 text-sm font-semibold text-success">
+            Shift completed · Thank you
+          </p>
+        ) : (
+          <FaceTouch
+            status="idle"
+            size={168}
+            onTouch={onClockOut}
+            label="Touch face to clock out"
+          />
+        )}
+      </div>
     </div>
   );
 }
