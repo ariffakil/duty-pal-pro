@@ -11,8 +11,11 @@ import { DaySummary } from "@/components/att/DaySummary";
 import { AiBuddy, type BuddyMessage } from "@/components/att/AiBuddy";
 import { NovaAvatar } from "@/components/att/NovaAvatar";
 import { NovaChat } from "@/components/att/NovaChat";
+import { NovaRequestSheet, type RequestKind } from "@/components/att/NovaRequestSheet";
+import { submitStaffRequest } from "@/lib/requests.functions";
 import { useNovaVoice } from "@/hooks/useNovaVoice";
 import { setNovaEmployee } from "@/lib/novaLang";
+
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -54,6 +57,11 @@ function Index() {
   const [clockedOut, setClockedOut] = useState(false);
   const [actualOutAt, setActualOutAt] = useState<Date | null>(null);
   const [now, setNow] = useState<Date | null>(null);
+  const [requestKind, setRequestKind] = useState<RequestKind | null>(null);
+  const askedRef = useRef<{ late: boolean; leave: boolean }>({ late: false, leave: false });
+  const lateMinutesRef = useRef(0);
+
+
 
   const [messages, setMessages] = useState<BuddyMessage[]>([
     {
@@ -137,8 +145,42 @@ function Index() {
           : `Thank you Sir. Your attendance is marked at ${fmt(at)} at Karama Branch. You are on time today.`,
         late > 0 ? "nudge" : "cheer",
       );
+      if (late > 30 && !askedRef.current.late) {
+        askedRef.current.late = true;
+        setTimeout(() => {
+          push(
+            `You are late by ${late} minutes. Would you like to send a reason for the delay to your Manager?`,
+            "nudge",
+          );
+          setRequestKind("late");
+        }, 5000);
+      }
     }, 2000);
   };
+
+  const sendRequest = useCallback(
+    async (kind: RequestKind, reason: string) => {
+      const res = await submitStaffRequest({
+        data: {
+          kind,
+          employeeId: EMPLOYEE.id,
+          employeeName: EMPLOYEE.name,
+          reason,
+          lateMinutes: kind === "late" ? lateMinutesRef.current : 0,
+          at: new Date().toISOString(),
+        },
+      });
+      push(
+        kind === "late"
+          ? `Your late reason has been sent to your Manager and HR. Reference ${res.reference}.`
+          : `Your leave request has been sent to your Manager and HR. Reference ${res.reference}.`,
+        "info",
+      );
+      return { reference: res.reference, notified: res.notified };
+    },
+    [push],
+  );
+
 
   const clockOutAt = useMemo(
     () => (clockInAt ? new Date(clockInAt.getTime() + SHIFT_HOURS * 3600_000) : null),
@@ -148,6 +190,22 @@ function Index() {
   const lateMinutes = clockInAt
     ? Math.max(0, clockInAt.getHours() * 60 + clockInAt.getMinutes() - SHIFT_START_MIN)
     : 0;
+  lateMinutesRef.current = lateMinutes;
+
+  // Not clocked in more than an hour after shift start → offer a leave request.
+  useEffect(() => {
+    if (!now || clockInAt || askedRef.current.leave) return;
+    const mins = now.getHours() * 60 + now.getMinutes() - SHIFT_START_MIN;
+    if (mins < 60) return;
+    askedRef.current.leave = true;
+    push(
+      "You have not clocked in for more than an hour. Would you like to write a leave request to your Manager?",
+      "nudge",
+    );
+    setRequestKind("leave");
+  }, [now, clockInAt, push]);
+
+
 
   const totalMs = SHIFT_HOURS * 3600_000;
   const elapsed =
@@ -336,6 +394,16 @@ function Index() {
 
 
               <AiBuddy messages={messages} />
+
+              {requestKind && (
+                <NovaRequestSheet
+                  kind={requestKind}
+                  lateMinutes={lateMinutes}
+                  onClose={() => setRequestKind(null)}
+                  onSubmit={(reason) => sendRequest(requestKind, reason)}
+                />
+              )}
+
             </div>
 
             <NovaChat
