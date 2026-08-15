@@ -221,7 +221,7 @@ function Index() {
 
               <NovaAvatar
                 text={latest?.text ?? ""}
-                tone={latest?.tone}
+                tone={latest?.tone ?? "info"}
                 speaking={speaking}
                 voiceOn={voiceOn}
                 onToggleVoice={toggleVoice}
