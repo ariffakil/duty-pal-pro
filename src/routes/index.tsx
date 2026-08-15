@@ -57,6 +57,9 @@ function Index() {
   const [clockedOut, setClockedOut] = useState(false);
   const [actualOutAt, setActualOutAt] = useState<Date | null>(null);
   const [now, setNow] = useState<Date | null>(null);
+  const [requestKind, setRequestKind] = useState<RequestKind | null>(null);
+  const askedRef = useRef<{ late: boolean; leave: boolean }>({ late: false, leave: false });
+
 
   const [messages, setMessages] = useState<BuddyMessage[]>([
     {
