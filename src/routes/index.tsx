@@ -10,6 +10,7 @@ import { AiBuddy, type BuddyMessage } from "@/components/att/AiBuddy";
 import { NovaAvatar } from "@/components/att/NovaAvatar";
 import { NovaChat } from "@/components/att/NovaChat";
 import { useNovaVoice } from "@/hooks/useNovaVoice";
+import { setNovaEmployee } from "@/lib/novaLang";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -32,6 +33,9 @@ export const Route = createFileRoute("/")({
   }),
   component: Index,
 });
+
+/** Signed-in employee on this device. */
+const EMPLOYEE = { id: "EMP-1042", name: "Ariff" };
 
 const SHIFT_HOURS = 9;
 const SHIFT_START_MIN = 10 * 60; // 10:00
@@ -57,6 +61,11 @@ function Index() {
   ]);
   const msgId = useRef(2);
   const { speak, enabled: voiceOn, toggle: toggleVoice, speaking } = useNovaVoice();
+
+  // Nova remembers each signed-in employee's language on this device.
+  useEffect(() => {
+    setNovaEmployee(EMPLOYEE.id);
+  }, []);
 
   useEffect(() => {
     setNow(new Date());
