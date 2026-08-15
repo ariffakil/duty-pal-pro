@@ -7,6 +7,8 @@ import { FaceScan } from "@/components/att/FaceScan";
 import { AttendanceResult } from "@/components/att/AttendanceResult";
 import { ShiftDashboard } from "@/components/att/ShiftDashboard";
 import { AiBuddy, type BuddyMessage } from "@/components/att/AiBuddy";
+import { NovaAvatar } from "@/components/att/NovaAvatar";
+import { useNovaVoice } from "@/hooks/useNovaVoice";
 
 export const Route = createFileRoute("/")({
   head: () => ({
