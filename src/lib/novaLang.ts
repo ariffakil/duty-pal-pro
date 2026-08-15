@@ -96,7 +96,7 @@ export function setNovaLang(code: string) {
   current = code;
   if (typeof window !== "undefined") {
     try {
-      window.localStorage.setItem(STORAGE_KEY, code);
+      window.localStorage.setItem(storageKey(), code);
     } catch {
       /* storage unavailable */
     }
