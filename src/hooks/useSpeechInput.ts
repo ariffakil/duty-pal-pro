@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { resolveLang } from "@/lib/novaLang";
+import { detectLangFromText, resolveLang, setDetectedLang } from "@/lib/novaLang";
 
 type SpeechRecognitionLike = {
   lang: string;
@@ -62,7 +62,13 @@ export function useSpeechInput(onFinal: (text: string) => void) {
           if (r.isFinal) {
             const text = String(r[0].transcript).trim();
             setInterim("");
-            if (text) finalRef.current(text);
+            if (text) {
+              const heard = detectLangFromText(text);
+              if (heard && heard.split("-")[0] !== resolveLang().split("-")[0]) {
+                setDetectedLang(heard);
+              }
+              finalRef.current(text);
+            }
           } else {
             live += r[0].transcript;
           }
