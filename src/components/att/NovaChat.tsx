@@ -83,7 +83,7 @@ export function NovaChat({
   const endRef = useRef<HTMLDivElement>(null);
   const askRef = useRef<(t: string) => void>(() => {});
   const voice = useSpeechInput((t) => askRef.current(t));
-  const { code: langCode, meta: lang, resolved, setLang } = useNovaLang();
+  const { code: langCode, meta: lang, resolved, detectedMeta, setLang } = useNovaLang();
   const [langOpen, setLangOpen] = useState(false);
 
   useEffect(() => {
@@ -135,7 +135,9 @@ export function NovaChat({
             <div className="flex-1">
               <p className="text-sm font-semibold">Ask Nova</p>
               <p className="text-[11px] text-success">
-                Online · speaking {langCode === "auto" ? `auto (${resolved})` : lang.label}
+                {detectedMeta
+                  ? `Heard ${detectedMeta.flag} ${detectedMeta.label} · switched automatically`
+                  : `Online · speaking ${langCode === "auto" ? `auto (${resolved})` : lang.label}`}
               </p>
             </div>
             <div className="relative">
