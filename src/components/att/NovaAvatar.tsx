@@ -18,29 +18,31 @@ export function NovaAvatar({
   onToggleVoice: () => void;
   onReplay: () => void;
 }) {
-  const ring =
+  const accent =
     tone === "nudge"
-      ? "ring-warning/50"
+      ? "text-warning"
       : tone === "cheer"
-        ? "ring-success/50"
-        : "ring-primary/50";
+        ? "text-success"
+        : "text-primary";
 
   return (
-    <div className="px-6 pt-4">
-      <div className="surface-card flex items-start gap-3 p-4">
+    <div className="px-6 pt-3">
+      <div className="flex items-start gap-3">
         <button
           onClick={onReplay}
           aria-label="Replay Nova message"
-          className={`relative shrink-0 rounded-2xl ring-2 ${ring} transition-transform hover:scale-105`}
+          className="relative shrink-0"
         >
           <span
-            className="absolute inset-0 rounded-2xl opacity-70"
+            className={`absolute left-1/2 top-1/2 h-20 w-20 -translate-x-1/2 -translate-y-1/2 rounded-full blur-xl ${
+              speaking ? "opacity-70" : "opacity-40"
+            }`}
             style={{ backgroundImage: "var(--gradient-aurora)" }}
           />
           <img
             src={novaAvatar.url}
             alt="Nova AI assistant avatar"
-            className={`relative h-16 w-16 rounded-2xl object-contain p-1 ${
+            className={`relative h-20 w-20 object-contain drop-shadow-lg ${
               speaking ? "animate-pulse-ring" : "animate-float-soft"
             }`}
           />
@@ -60,22 +62,20 @@ export function NovaAvatar({
           )}
         </button>
 
-        <div className="min-w-0 flex-1">
+        <div className="min-w-0 flex-1 pt-1">
           <div className="flex items-center gap-2">
-            <p className="text-sm font-semibold">
-              Nova <span className="gradient-text">AI Assistant</span>
+            <p className="text-xs font-semibold uppercase tracking-[0.2em]">
+              Nova <span className={accent}>AI</span>
             </p>
             <button
               onClick={onToggleVoice}
               aria-label={voiceOn ? "Mute Nova voice" : "Unmute Nova voice"}
-              className="ml-auto flex h-8 w-8 items-center justify-center rounded-lg border border-border bg-secondary/50 text-muted-foreground transition-colors hover:text-primary"
+              className="ml-auto text-muted-foreground transition-colors hover:text-primary"
             >
               {voiceOn ? <Volume2 className="h-4 w-4" /> : <VolumeX className="h-4 w-4" />}
             </button>
           </div>
-          <p className="mt-2 rounded-2xl rounded-tl-sm bg-secondary/60 px-4 py-2.5 text-sm leading-relaxed text-foreground/90">
-            {text}
-          </p>
+          <p className="mt-1.5 text-sm leading-relaxed text-foreground/90">{text}</p>
         </div>
       </div>
     </div>
