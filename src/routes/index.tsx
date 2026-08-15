@@ -6,6 +6,8 @@ import { Bell, ChevronLeft, ShieldCheck, Wifi } from "lucide-react";
 import { FaceScan } from "@/components/att/FaceScan";
 import { AttendanceResult } from "@/components/att/AttendanceResult";
 import { ShiftDashboard } from "@/components/att/ShiftDashboard";
+import { DaySummary } from "@/components/att/DaySummary";
+
 import { AiBuddy, type BuddyMessage } from "@/components/att/AiBuddy";
 import { NovaAvatar } from "@/components/att/NovaAvatar";
 import { NovaChat } from "@/components/att/NovaChat";
