@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { Bell, ChevronLeft, Shield, ShieldCheck, Wifi } from "lucide-react";
+import { Bell, ChevronLeft, ShieldCheck, Wifi } from "lucide-react";
 
 
 import { FaceScan } from "@/components/att/FaceScan";
@@ -140,40 +140,8 @@ function Index() {
     <main className="relative min-h-screen overflow-hidden bg-background">
       <div className="pointer-events-none absolute inset-x-0 top-0 h-[420px] halo" />
 
-      <div className="relative mx-auto flex min-h-screen max-w-6xl flex-col items-center gap-10 px-6 py-12 lg:flex-row lg:items-center lg:justify-between">
-        <section className="max-w-md text-center lg:text-left">
-          <p className="inline-flex items-center gap-2 rounded-full border border-border bg-secondary/50 px-3 py-1 text-xs font-medium tracking-wide text-muted-foreground">
-            <Shield className="h-3.5 w-3.5 text-primary" /> Time Attendance &amp; Access Control
-          </p>
-          <h1 className="mt-5 text-4xl font-semibold leading-tight tracking-tight sm:text-5xl">
-            Face-verified attendance with an <span className="gradient-text">AI shift buddy</span>
-          </h1>
-          <p className="mt-4 text-base leading-relaxed text-muted-foreground">
-            Employees clock in with a liveness-checked face scan, the server confirms the site
-            geofence, and Nova keeps the day on track with live countdowns and smart reminders.
-          </p>
-          <dl className="mt-8 grid grid-cols-3 gap-4 text-left">
-            {[
-              ["<1.2s", "Face match"],
-              ["99.4%", "Accuracy"],
-              ["24/7", "AI buddy"],
-            ].map(([v, l]) => (
-              <div key={l}>
-                <dt className="text-2xl font-semibold">{v}</dt>
-                <dd className="text-xs uppercase tracking-wider text-muted-foreground">{l}</dd>
-              </div>
-            ))}
-          </dl>
-          <Link
-            to="/admin"
-            className="mt-8 inline-flex items-center gap-2 rounded-xl border border-border bg-secondary/50 px-4 py-2.5 text-sm font-semibold transition-colors hover:text-primary"
-          >
-            <ShieldCheck className="h-4 w-4 text-primary" /> Open admin console
-          </Link>
-
-        </section>
-
-        <section className="relative">
+      <div className="relative mx-auto flex min-h-screen w-full max-w-xl flex-col items-center justify-center px-4 py-8">
+        <section className="relative flex flex-col items-center">
           <div
             className="relative w-[380px] max-w-full rounded-[2.6rem] border border-border p-3"
             style={{
@@ -258,6 +226,12 @@ function Index() {
               <AiBuddy messages={messages} />
             </div>
           </div>
+          <Link
+            to="/admin"
+            className="mt-4 inline-flex items-center gap-2 text-xs font-medium text-muted-foreground transition-colors hover:text-primary"
+          >
+            <ShieldCheck className="h-3.5 w-3.5 text-primary" /> Admin console
+          </Link>
         </section>
       </div>
     </main>
