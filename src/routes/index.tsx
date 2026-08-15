@@ -143,8 +143,42 @@ function Index() {
           : `Thank you Sir. Your attendance is marked at ${fmt(at)} at Karama Branch. You are on time today.`,
         late > 0 ? "nudge" : "cheer",
       );
+      if (late > 30 && !askedRef.current.late) {
+        askedRef.current.late = true;
+        setTimeout(() => {
+          push(
+            `You are late by ${late} minutes. Would you like to send a reason for the delay to your Manager?`,
+            "nudge",
+          );
+          setRequestKind("late");
+        }, 5000);
+      }
     }, 2000);
   };
+
+  const sendRequest = useCallback(
+    async (kind: RequestKind, reason: string) => {
+      const res = await submitStaffRequest({
+        data: {
+          kind,
+          employeeId: EMPLOYEE.id,
+          employeeName: EMPLOYEE.name,
+          reason,
+          lateMinutes: kind === "late" ? lateMinutesRef.current : 0,
+          at: new Date().toISOString(),
+        },
+      });
+      push(
+        kind === "late"
+          ? `Your late reason has been sent to your Manager and HR. Reference ${res.reference}.`
+          : `Your leave request has been sent to your Manager and HR. Reference ${res.reference}.`,
+        "info",
+      );
+      return { reference: res.reference, notified: res.notified };
+    },
+    [push],
+  );
+
 
   const clockOutAt = useMemo(
     () => (clockInAt ? new Date(clockInAt.getTime() + SHIFT_HOURS * 3600_000) : null),
