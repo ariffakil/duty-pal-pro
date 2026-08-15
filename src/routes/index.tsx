@@ -88,6 +88,32 @@ function Index() {
     [speak],
   );
 
+  // Daily 06:00 morning briefing — spoken once per day, per employee, per device.
+  useEffect(() => {
+    const KEY = `nova.morningBriefing.${EMPLOYEE.id}`;
+    const check = () => {
+      const d = new Date();
+      const today = d.toDateString();
+      if (d.getHours() < 6) return;
+      // Keep it a morning greeting (06:00 - 09:59 window).
+      if (d.getHours() >= 10) return;
+      try {
+        if (localStorage.getItem(KEY) === today) return;
+        localStorage.setItem(KEY, today);
+      } catch {
+        return;
+      }
+      push(
+        `Good morning ${EMPLOYEE.name}. Your duty hours today are morning 8:30 to evening 6:30 at Karama Branch.`,
+        "info",
+      );
+    };
+    check();
+    const t = setInterval(check, 60_000);
+    return () => clearInterval(t);
+  }, [push]);
+
+
   const startScan = () => {
     setStage("scanning");
     setProgress(0);
