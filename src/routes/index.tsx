@@ -421,6 +421,35 @@ function Index() {
                       `You have successfully clocked out at ${fmt(out)}. Here is your summary for the day. Total working hours ${clockInAt ? fmt(clockInAt) : "08:34"} to ${fmt(out)}, that is ${h} hours and ${m} minutes. Have a great evening, Sir!`,
                       "cheer",
                     );
+
+                    // Last punch out of the week / month → period attendance report.
+                    const today = {
+                      in: clockInAt ? fmt(clockInAt) : fmt(out),
+                      out: fmt(out),
+                      hours: Math.round((ms / 3600_000) * 10) / 10,
+                      late: lateMinutes,
+                    };
+                    const monthEnd = isLastPunchOfMonth(out);
+                    const weekEnd = isLastPunchOfWeek(out);
+                    if (monthEnd || weekEnd) {
+                      const report = monthEnd
+                        ? buildMonthReport(out, today)
+                        : buildWeekReport(out, today);
+                      setPeriod({
+                        scope: monthEnd ? "month" : "week",
+                        title: monthEnd ? "Monthly attendance report" : "Weekly attendance report",
+                        range: report.range,
+                        days: report.days,
+                      });
+                      setTimeout(() => {
+                        push(
+                          monthEnd
+                            ? "Here is your monthly attendance summary report. Please review your total hours, overtime and late days for this month."
+                            : "It is the end of your work week. Here is your weekly attendance summary report.",
+                          "info",
+                        );
+                      }, 1200);
+                    }
                   }}
                 />
               )}
