@@ -248,6 +248,12 @@ function Index() {
             </div>
 
             <NovaChat
+              latest={latest ? { text: latest.text, tone: latest.tone } : undefined}
+              speaking={speaking}
+              voiceOn={voiceOn}
+              onToggleVoice={toggleVoice}
+              onReplay={() => latest && speak(latest.text)}
+
               context={{
                 name: "Ariff",
                 site: "Karama Branch, Dubai",
