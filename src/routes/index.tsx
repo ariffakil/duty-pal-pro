@@ -47,10 +47,15 @@ function Index() {
   const [clockedOut, setClockedOut] = useState(false);
   const [now, setNow] = useState<Date | null>(null);
   const [messages, setMessages] = useState<BuddyMessage[]>([
-    { id: 1, text: "Good morning, Ariff. Your duty starts at 10:00 in Karama, Dubai.", tone: "info" },
-    { id: 2, text: "Traffic looks light — leave in 15 minutes to stay on time.", tone: "nudge" },
+    {
+      id: 1,
+      text: "Good morning, Alex. Today your duty schedule is 08:30 to 18:00 at Karama Branch.",
+      tone: "info",
+    },
+    { id: 2, text: "Only 10 minutes remaining to clock in. Shall we scan your face?", tone: "nudge" },
   ]);
   const msgId = useRef(2);
+  const { speak, enabled: voiceOn, toggle: toggleVoice, speaking } = useNovaVoice();
 
   useEffect(() => {
     setNow(new Date());
@@ -58,11 +63,16 @@ function Index() {
     return () => clearInterval(t);
   }, []);
 
+  const latest = messages[messages.length - 1];
 
-  const push = useCallback((text: string, tone: BuddyMessage["tone"] = "info") => {
-    msgId.current += 1;
-    setMessages((m) => [...m, { id: msgId.current, text, tone }]);
-  }, []);
+  const push = useCallback(
+    (text: string, tone: BuddyMessage["tone"] = "info") => {
+      msgId.current += 1;
+      setMessages((m) => [...m, { id: msgId.current, text, tone }]);
+      speak(text);
+    },
+    [speak],
+  );
 
   const startScan = () => {
     setStage("scanning");
