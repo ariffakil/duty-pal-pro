@@ -11,8 +11,11 @@ import { DaySummary } from "@/components/att/DaySummary";
 import { AiBuddy, type BuddyMessage } from "@/components/att/AiBuddy";
 import { NovaAvatar } from "@/components/att/NovaAvatar";
 import { NovaChat } from "@/components/att/NovaChat";
+import { NovaRequestSheet, type RequestKind } from "@/components/att/NovaRequestSheet";
+import { submitStaffRequest } from "@/lib/requests.functions";
 import { useNovaVoice } from "@/hooks/useNovaVoice";
 import { setNovaEmployee } from "@/lib/novaLang";
+
 
 export const Route = createFileRoute("/")({
   head: () => ({
