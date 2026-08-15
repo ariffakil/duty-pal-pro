@@ -65,6 +65,6 @@ export function useNovaLang() {
     };
   }, []);
 
-  const meta = NOVA_LANGS.find((l) => l.code === code) ?? NOVA_LANGS[0];
+  const meta = NOVA_LANGS.find((l) => l.code === code) ?? NOVA_LANGS[0]!;
   return { code, meta, resolved: resolveLang(code), setLang: setNovaLang };
 }
