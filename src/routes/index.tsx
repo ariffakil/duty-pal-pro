@@ -275,7 +275,7 @@ function Index() {
       spokeRef.current ? 1200 : 6000,
     );
     return () => clearTimeout(t);
-  }, [stage, speaking]);
+  }, [stage, speaking, period]);
 
 
 
@@ -383,6 +383,21 @@ function Index() {
                     setProgress(0);
                   }}
 
+                />
+              ) : stage === "period" && period ? (
+                <PeriodSummary
+                  scope={period.scope}
+                  title={period.title}
+                  range={period.range}
+                  days={period.days}
+                  onDone={() => {
+                    setPeriod(null);
+                    setStage("idle");
+                    setClockInAt(null);
+                    setActualOutAt(null);
+                    setClockedOut(false);
+                    setProgress(0);
+                  }}
                 />
               ) : (
                 <ShiftDashboard
