@@ -394,6 +394,16 @@ function Index() {
 
 
               <AiBuddy messages={messages} />
+
+              {requestKind && (
+                <NovaRequestSheet
+                  kind={requestKind}
+                  lateMinutes={lateMinutes}
+                  onClose={() => setRequestKind(null)}
+                  onSubmit={(reason) => sendRequest(requestKind, reason)}
+                />
+              )}
+
             </div>
 
             <NovaChat
