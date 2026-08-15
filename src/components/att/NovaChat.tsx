@@ -78,11 +78,11 @@ export function NovaChat({
 }: {
   context: NovaContext;
   onSpeak: (text: string) => void;
-  latest?: { text: string; tone?: "info" | "nudge" | "cheer" };
-  speaking?: boolean;
-  voiceOn?: boolean;
-  onToggleVoice?: () => void;
-  onReplay?: () => void;
+  latest?: { text: string; tone?: "info" | "nudge" | "cheer" } | undefined;
+  speaking?: boolean | undefined;
+  voiceOn?: boolean | undefined;
+  onToggleVoice?: (() => void) | undefined;
+  onReplay?: (() => void) | undefined;
 }) {
 
   const [open, setOpen] = useState(false);
