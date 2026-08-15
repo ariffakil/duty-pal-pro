@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
+import { resolveLang } from "@/lib/novaLang";
 
 type SpeechRecognitionLike = {
   lang: string;
@@ -51,7 +52,7 @@ export function useSpeechInput(onFinal: (text: string) => void) {
       window.speechSynthesis?.cancel();
       const rec = new Ctor();
       recRef.current = rec;
-      rec.lang = "en-US";
+      rec.lang = resolveLang();
       rec.interimResults = true;
       rec.continuous = false;
       rec.onresult = (e: any) => {

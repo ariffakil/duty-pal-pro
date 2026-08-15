@@ -1,4 +1,5 @@
 import { useCallback, useRef, useState } from "react";
+import { resolveLang } from "@/lib/novaLang";
 
 /** Plays a short "ding" then speaks the text aloud. */
 export function useNovaVoice() {
@@ -44,6 +45,14 @@ export function useNovaVoice() {
         try {
           synth.cancel();
           const u = new SpeechSynthesisUtterance(text);
+          const lang = resolveLang();
+          u.lang = lang;
+          const base = lang.split("-")[0];
+          const voices = synth.getVoices?.() ?? [];
+          const match =
+            voices.find((v) => v.lang.replace("_", "-") === lang) ??
+            voices.find((v) => v.lang.replace("_", "-").split("-")[0] === base);
+          if (match) u.voice = match;
           u.rate = 1;
           u.pitch = 1.1;
           u.volume = 1;
