@@ -116,13 +116,14 @@ export function NovaChat({
         <button
           onClick={openChat}
           aria-label="Ask Nova by voice or text"
-          className="absolute bottom-5 right-5 z-20 flex h-14 w-14 items-center justify-center rounded-full text-primary-foreground"
+          className="absolute bottom-5 right-5 z-20 flex h-16 w-16 items-center justify-center rounded-full"
           style={{ backgroundImage: "var(--gradient-aurora)", boxShadow: "var(--shadow-glow)" }}
         >
-          <MessageCircle className="h-6 w-6 animate-float-soft" />
+          <NovaMascot className="h-12 w-12 animate-float-soft drop-shadow" />
           <span className="absolute -top-0.5 -right-0.5 h-3 w-3 rounded-full bg-success ring-2 ring-background" />
         </button>
       )}
+
 
       {open && (
         <div className="absolute inset-x-0 bottom-0 z-30 flex max-h-[78%] flex-col rounded-t-[2rem] border-t border-border bg-background/95 backdrop-blur-xl">
