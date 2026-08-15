@@ -8,6 +8,7 @@ import { AttendanceResult } from "@/components/att/AttendanceResult";
 import { ShiftDashboard } from "@/components/att/ShiftDashboard";
 import { AiBuddy, type BuddyMessage } from "@/components/att/AiBuddy";
 import { NovaAvatar } from "@/components/att/NovaAvatar";
+import { NovaChat } from "@/components/att/NovaChat";
 import { useNovaVoice } from "@/hooks/useNovaVoice";
 
 export const Route = createFileRoute("/")({
@@ -225,6 +226,25 @@ function Index() {
 
               <AiBuddy messages={messages} />
             </div>
+
+            <NovaChat
+              context={{
+                name: "Ariff",
+                site: "Karama Branch, Dubai",
+                shift: "08:30 to 18:00",
+                clockIn: clockInAt ? fmt(clockInAt) : null,
+                clockOut: clockOutAt ? fmt(clockOutAt) : null,
+                clockedOut,
+                lateMinutes,
+                remaining,
+                nextReminder: clockedOut
+                  ? "Tomorrow 08:00 — duty starts at 08:30"
+                  : clockInAt
+                    ? "Stand up and stretch in 10 minutes"
+                    : "Clock in reminder in 10 minutes",
+              }}
+              onSpeak={speak}
+            />
           </div>
           <Link
             to="/admin"
