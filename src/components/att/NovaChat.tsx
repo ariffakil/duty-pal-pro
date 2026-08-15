@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from "react";
-import { MessageCircle, X, Send, Mic, Square, Languages, Check } from "lucide-react";
+import { X, Send, Mic, Square, Languages, Check } from "lucide-react";
 import novaAvatar from "@/assets/nova-avatar.png.asset.json";
+import { NovaMascot } from "@/components/att/NovaMascot";
+
 import { useSpeechInput } from "@/hooks/useSpeechInput";
 import { NOVA_LANGS, useNovaLang } from "@/lib/novaLang";
 
