@@ -210,12 +210,28 @@ function Index() {
     const mins = now.getHours() * 60 + now.getMinutes() - SHIFT_START_MIN;
     if (mins < 60) return;
     askedRef.current.leave = true;
-    push(
-      "You have not clocked in for more than an hour. Would you like to write a leave request to your Manager?",
-      "nudge",
-    );
-    setRequestKind("leave");
-  }, [now, clockInAt, push]);
+    setPendingRequest((q) => q ?? "leave");
+  }, [now, clockInAt]);
+
+  // Show one popup at a time: a queued request sheet only opens once the
+  // current message (thank-you / summary / report) is closed and Nova is silent.
+  useEffect(() => {
+    if (!pendingRequest || requestKind) return;
+    if (speaking) return;
+    if (stage !== "idle" && stage !== "day") return;
+    const t = setTimeout(() => {
+      push(
+        pendingRequest === "late"
+          ? `You are late by ${lateMinutesRef.current} minutes. Would you like to send a reason for the delay to your Manager?`
+          : "You have not clocked in for more than an hour. Would you like to write a leave request to your Manager?",
+        "nudge",
+      );
+      setRequestKind(pendingRequest);
+      setPendingRequest(null);
+    }, 900);
+    return () => clearTimeout(t);
+  }, [pendingRequest, requestKind, speaking, stage, push]);
+
 
 
 
