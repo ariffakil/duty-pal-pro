@@ -247,7 +247,10 @@ function Index() {
                   clockedOut={clockedOut}
                   onClockOut={() => {
                     setClockedOut(true);
-                    push("Clock out verified. Have a great evening, Sir!", "cheer");
+                    push(
+                      `You have successfully clocked out. Total working hours ${clockInAt ? fmt(clockInAt) : "08:34"} to ${clockOutAt ? fmt(clockOutAt) : "18:25"}. Have a great evening, Sir!`,
+                      "cheer",
+                    );
                   }}
                 />
               )}
