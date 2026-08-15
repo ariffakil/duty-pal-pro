@@ -115,7 +115,7 @@ export function useNovaLang() {
 
   useEffect(() => {
     try {
-      const saved = window.localStorage.getItem(STORAGE_KEY);
+      const saved = readStored(employeeId);
       if (saved && saved !== current) {
         current = saved;
         setCode(saved);
