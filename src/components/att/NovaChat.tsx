@@ -114,6 +114,41 @@ export function NovaChat({
     if (voice.supported) voice.start();
   };
 
+  // Draggable Nova launcher (mouse / touch).
+  const dragRef = useRef<HTMLDivElement | null>(null);
+  const movedRef = useRef(false);
+  const [pos, setPos] = useState({ right: 20, bottom: 20 });
+
+  const onPointerDown = (e: React.PointerEvent) => {
+    const el = dragRef.current;
+    if (!el) return;
+    movedRef.current = false;
+    const startX = e.clientX;
+    const startY = e.clientY;
+    const start = { ...pos };
+    const parent = el.parentElement?.getBoundingClientRect();
+
+    const move = (ev: PointerEvent) => {
+      const dx = startX - ev.clientX;
+      const dy = startY - ev.clientY;
+      if (Math.abs(dx) > 3 || Math.abs(dy) > 3) movedRef.current = true;
+      const maxR = parent ? parent.width - 88 : 300;
+      const maxB = parent ? parent.height - 88 : 600;
+      setPos({
+        right: Math.min(Math.max(start.right + dx, 4), Math.max(4, maxR)),
+        bottom: Math.min(Math.max(start.bottom + dy, 4), Math.max(4, maxB)),
+      });
+    };
+    const up = () => {
+      window.removeEventListener("pointermove", move);
+      window.removeEventListener("pointerup", up);
+      setTimeout(() => (movedRef.current = false), 50);
+    };
+    window.addEventListener("pointermove", move);
+    window.addEventListener("pointerup", up);
+  };
+
+
   return (
     <>
       {!open && (
