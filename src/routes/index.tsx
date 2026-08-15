@@ -156,7 +156,7 @@ function Index() {
             className="relative w-[390px] max-w-full rounded-[3rem] border-[8px] border-secondary p-0"
             style={{ boxShadow: "var(--shadow-elevated)" }}
           >
-            <div className="relative flex max-h-[812px] min-h-[812px] flex-col overflow-y-auto rounded-[2.4rem] bg-background">
+            <div className="no-scrollbar relative flex max-h-[812px] min-h-[812px] flex-col overflow-y-auto rounded-[2.4rem] bg-background">
               <div className="flex items-center justify-between px-8 pt-6 text-xs text-muted-foreground">
                 <span className="font-medium text-foreground">{now ? fmt(now) : "--:--"}</span>
                 <span className="flex items-center gap-1.5">
