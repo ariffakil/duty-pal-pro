@@ -154,7 +154,7 @@ function Index() {
       spokeRef.current = true;
       return;
     }
-    const next = stage === "verified" ? "day" : "idle";
+    const next = "day" as const;
     const t = setTimeout(() => setStage(next), spokeRef.current ? 1200 : 6000);
     return () => clearTimeout(t);
   }, [stage, speaking]);
