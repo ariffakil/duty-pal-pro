@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Bell, ChevronLeft, ShieldCheck, Wifi } from "lucide-react";
+import mytimeLogo from "@/assets/mytime-logo.png.asset.json";
 
 
 import { FaceScan } from "@/components/att/FaceScan";
