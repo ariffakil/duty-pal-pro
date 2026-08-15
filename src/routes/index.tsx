@@ -43,14 +43,16 @@ const SHIFT_START_MIN = 10 * 60; // 10:00
 const fmt = (d: Date) =>
   `${String(d.getHours()).padStart(2, "0")}:${String(d.getMinutes()).padStart(2, "0")}`;
 
-type Stage = "idle" | "scanning" | "verified" | "day";
+type Stage = "idle" | "scanning" | "verified" | "day" | "summary";
 
 function Index() {
   const [stage, setStage] = useState<Stage>("idle");
   const [progress, setProgress] = useState(0);
   const [clockInAt, setClockInAt] = useState<Date | null>(null);
   const [clockedOut, setClockedOut] = useState(false);
+  const [actualOutAt, setActualOutAt] = useState<Date | null>(null);
   const [now, setNow] = useState<Date | null>(null);
+
   const [messages, setMessages] = useState<BuddyMessage[]>([
     {
       id: 1,
