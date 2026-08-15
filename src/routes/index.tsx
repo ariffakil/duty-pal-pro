@@ -123,11 +123,11 @@ function Index() {
   useEffect(() => {
     if (stage !== "day") return;
     const stand = setTimeout(
-      () => push("You've been seated for 50 minutes — stand up and stretch for 2 minutes.", "nudge"),
+      () => push("You've been seated for 50 minutes. Please stand up and stretch for 2 minutes.", "nudge"),
       9000,
     );
     const evening = setTimeout(
-      () => push("Good evening! 30 minutes left on your shift. Wrap up your tasks.", "info"),
+      () => push("Good evening. Your duty ends in 00:30 minutes. Please wrap up your tasks.", "info"),
       18000,
     );
     return () => {
