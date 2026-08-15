@@ -188,6 +188,22 @@ function Index() {
   const lateMinutes = clockInAt
     ? Math.max(0, clockInAt.getHours() * 60 + clockInAt.getMinutes() - SHIFT_START_MIN)
     : 0;
+  lateMinutesRef.current = lateMinutes;
+
+  // Not clocked in more than an hour after shift start → offer a leave request.
+  useEffect(() => {
+    if (!now || clockInAt || askedRef.current.leave) return;
+    const mins = now.getHours() * 60 + now.getMinutes() - SHIFT_START_MIN;
+    if (mins < 60) return;
+    askedRef.current.leave = true;
+    push(
+      "You have not clocked in for more than an hour. Would you like to write a leave request to your Manager?",
+      "nudge",
+    );
+    setRequestKind("leave");
+  }, [now, clockInAt, push]);
+
+
 
   const totalMs = SHIFT_HOURS * 3600_000;
   const elapsed =
