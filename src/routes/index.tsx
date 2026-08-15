@@ -7,6 +7,8 @@ import { FaceScan } from "@/components/att/FaceScan";
 import { AttendanceResult } from "@/components/att/AttendanceResult";
 import { ShiftDashboard } from "@/components/att/ShiftDashboard";
 import { AiBuddy, type BuddyMessage } from "@/components/att/AiBuddy";
+import { NovaAvatar } from "@/components/att/NovaAvatar";
+import { useNovaVoice } from "@/hooks/useNovaVoice";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -45,10 +47,15 @@ function Index() {
   const [clockedOut, setClockedOut] = useState(false);
   const [now, setNow] = useState<Date | null>(null);
   const [messages, setMessages] = useState<BuddyMessage[]>([
-    { id: 1, text: "Good morning, Ariff. Your duty starts at 10:00 in Karama, Dubai.", tone: "info" },
-    { id: 2, text: "Traffic looks light — leave in 15 minutes to stay on time.", tone: "nudge" },
+    {
+      id: 1,
+      text: "Good morning, Alex. Today your duty schedule is 08:30 to 18:00 at Karama Branch.",
+      tone: "info",
+    },
+    { id: 2, text: "Only 10 minutes remaining to clock in. Shall we scan your face?", tone: "nudge" },
   ]);
   const msgId = useRef(2);
+  const { speak, enabled: voiceOn, toggle: toggleVoice, speaking } = useNovaVoice();
 
   useEffect(() => {
     setNow(new Date());
@@ -56,11 +63,16 @@ function Index() {
     return () => clearInterval(t);
   }, []);
 
+  const latest = messages[messages.length - 1];
 
-  const push = useCallback((text: string, tone: BuddyMessage["tone"] = "info") => {
-    msgId.current += 1;
-    setMessages((m) => [...m, { id: msgId.current, text, tone }]);
-  }, []);
+  const push = useCallback(
+    (text: string, tone: BuddyMessage["tone"] = "info") => {
+      msgId.current += 1;
+      setMessages((m) => [...m, { id: msgId.current, text, tone }]);
+      speak(text);
+    },
+    [speak],
+  );
 
   const startScan = () => {
     setStage("scanning");
@@ -81,8 +93,8 @@ function Index() {
       const late = at.getHours() * 60 + at.getMinutes() - SHIFT_START_MIN;
       push(
         late > 0
-          ? `Attendance marked at ${fmt(at)} — you are late by ${late} minutes. I logged the reason field for you.`
-          : `Attendance marked at ${fmt(at)} — you are on time. Great start!`,
+          ? `Thank you Sir. Your attendance is marked at ${fmt(at)} at Karama Branch. You are late today by ${String(Math.floor(late / 60)).padStart(2, "0")}:${String(late % 60).padStart(2, "0")} minutes.`
+          : `Thank you Sir. Your attendance is marked at ${fmt(at)} at Karama Branch. You are on time today.`,
         late > 0 ? "nudge" : "cheer",
       );
     }, 2000);
@@ -111,11 +123,11 @@ function Index() {
   useEffect(() => {
     if (stage !== "day") return;
     const stand = setTimeout(
-      () => push("You've been seated for 50 minutes — stand up and stretch for 2 minutes.", "nudge"),
+      () => push("You've been seated for 50 minutes. Please stand up and stretch for 2 minutes.", "nudge"),
       9000,
     );
     const evening = setTimeout(
-      () => push("Good evening! 30 minutes left on your shift. Wrap up your tasks.", "info"),
+      () => push("Good evening. Your duty ends in 00:30 minutes. Please wrap up your tasks.", "info"),
       18000,
     );
     return () => {
@@ -207,6 +219,15 @@ function Index() {
                 </button>
               </header>
 
+              <NovaAvatar
+                text={latest?.text ?? ""}
+                tone={latest?.tone ?? "info"}
+                speaking={speaking}
+                voiceOn={voiceOn}
+                onToggleVoice={toggleVoice}
+                onReplay={() => latest && speak(latest.text)}
+              />
+
               {stage === "idle" || stage === "scanning" ? (
                 <FaceScan status={stage} progress={progress} onScan={startScan} />
               ) : stage === "verified" ? (
@@ -226,7 +247,10 @@ function Index() {
                   clockedOut={clockedOut}
                   onClockOut={() => {
                     setClockedOut(true);
-                    push("Clock out verified. Have a great evening, Sir!", "cheer");
+                    push(
+                      `You have successfully clocked out. Total working hours ${clockInAt ? fmt(clockInAt) : "08:34"} to ${clockOutAt ? fmt(clockOutAt) : "18:25"}. Have a great evening, Sir!`,
+                      "cheer",
+                    );
                   }}
                 />
               )}
