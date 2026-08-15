@@ -153,49 +153,52 @@ function Index() {
       <div className="relative mx-auto flex min-h-screen w-full max-w-xl flex-col items-center justify-center px-4 py-8">
         <section className="relative flex flex-col items-center">
           <div
-            className="relative w-[380px] max-w-full rounded-[2.6rem] border border-border p-3"
-            style={{
-              backgroundImage: "var(--gradient-surface)",
-              boxShadow: "var(--shadow-elevated)",
-            }}
+            className="relative w-[390px] max-w-full rounded-[3rem] border-[8px] border-secondary p-0"
+            style={{ boxShadow: "var(--shadow-elevated)" }}
           >
-            <div className="relative max-h-[780px] overflow-y-auto rounded-[2.1rem] bg-background">
-              <div className="flex items-center justify-between px-6 pt-4 text-xs text-muted-foreground">
+            <div className="relative flex max-h-[812px] min-h-[812px] flex-col overflow-y-auto rounded-[2.4rem] bg-background">
+              <div className="flex items-center justify-between px-8 pt-6 text-xs text-muted-foreground">
                 <span className="font-medium text-foreground">{now ? fmt(now) : "--:--"}</span>
                 <span className="flex items-center gap-1.5">
                   <Wifi className="h-3.5 w-3.5" /> 5G
                 </span>
               </div>
 
-              <header className="flex items-center gap-3 px-6 pb-2 pt-5">
+              <header className="flex items-center gap-3 px-6 pb-1 pt-4">
                 {stage === "day" ? (
                   <button
                     onClick={() => setStage("verified")}
-                    className="flex h-9 w-9 items-center justify-center rounded-xl border border-border bg-secondary/50"
+                    className="flex h-10 w-10 items-center justify-center rounded-2xl border border-primary/25 bg-secondary/40"
                     aria-label="Back"
                   >
                     <ChevronLeft className="h-4 w-4" />
                   </button>
                 ) : (
                   <div
-                    className="flex h-10 w-10 items-center justify-center rounded-xl text-sm font-semibold text-primary-foreground"
+                    className="flex h-12 w-12 items-center justify-center rounded-2xl border border-accent/30 font-display text-sm font-bold text-primary-foreground"
                     style={{ backgroundImage: "var(--gradient-aurora)" }}
                   >
                     AM
                   </div>
                 )}
                 <div className="flex-1">
-                  <p className="text-sm font-semibold">Ariff Mohamed</p>
+                  <p className="font-display text-base font-bold uppercase tracking-wide text-accent">
+                    Ariff Mohamed
+                  </p>
                   <p className="text-xs text-muted-foreground">Site Engineer · EMP-2481</p>
                 </div>
+                <span className="rounded-full border border-primary/25 bg-secondary px-3 py-1 text-[10px] font-bold uppercase tracking-widest text-primary">
+                  {clockedOut ? "Closed" : clockInAt ? "On duty" : "Active"}
+                </span>
                 <button
-                  className="relative flex h-9 w-9 items-center justify-center rounded-xl border border-border bg-secondary/50"
+                  className="relative flex h-9 w-9 items-center justify-center rounded-xl border border-primary/20 bg-secondary/40"
                   aria-label="Notifications"
                 >
                   <Bell className="h-4 w-4" />
-                  <span className="absolute right-2 top-2 h-1.5 w-1.5 rounded-full bg-primary" />
+                  <span className="absolute right-2 top-2 h-1.5 w-1.5 rounded-full bg-accent" />
                 </button>
               </header>
+
 
               <NovaAvatar
                 text={latest?.text ?? ""}
