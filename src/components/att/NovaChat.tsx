@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState } from "react";
-import { MessageCircle, X, Send, Mic, Square } from "lucide-react";
+import { MessageCircle, X, Send, Mic, Square, Languages, Check } from "lucide-react";
 import novaAvatar from "@/assets/nova-avatar.png.asset.json";
 import { useSpeechInput } from "@/hooks/useSpeechInput";
+import { NOVA_LANGS, useNovaLang } from "@/lib/novaLang";
 
 export type NovaContext = {
   name: string;
@@ -82,6 +83,8 @@ export function NovaChat({
   const endRef = useRef<HTMLDivElement>(null);
   const askRef = useRef<(t: string) => void>(() => {});
   const voice = useSpeechInput((t) => askRef.current(t));
+  const { code: langCode, meta: lang, resolved, setLang } = useNovaLang();
+  const [langOpen, setLangOpen] = useState(false);
 
   useEffect(() => {
     endRef.current?.scrollIntoView({ block: "nearest", behavior: "smooth" });
@@ -131,7 +134,39 @@ export function NovaChat({
             />
             <div className="flex-1">
               <p className="text-sm font-semibold">Ask Nova</p>
-              <p className="text-[11px] text-success">Online · shift assistant</p>
+              <p className="text-[11px] text-success">
+                Online · speaking {langCode === "auto" ? `auto (${resolved})` : lang.label}
+              </p>
+            </div>
+            <div className="relative">
+              <button
+                onClick={() => setLangOpen((o) => !o)}
+                aria-label="Choose Nova language"
+                aria-expanded={langOpen}
+                className="flex items-center gap-1 rounded-full border border-border px-2.5 py-1 text-xs text-muted-foreground transition-colors hover:text-primary"
+              >
+                <Languages className="h-3.5 w-3.5" />
+                <span>{lang.flag}</span>
+              </button>
+              {langOpen && (
+                <div className="absolute right-0 top-9 z-40 w-44 overflow-hidden rounded-2xl border border-border bg-background/95 py-1 backdrop-blur-xl">
+                  {NOVA_LANGS.map((l) => (
+                    <button
+                      key={l.code}
+                      onClick={() => {
+                        setLang(l.code);
+                        setLangOpen(false);
+                        if (voice.listening) voice.stop();
+                      }}
+                      className="flex w-full items-center gap-2 px-3 py-2 text-left text-xs text-foreground/90 transition-colors hover:bg-secondary/60"
+                    >
+                      <span>{l.flag}</span>
+                      <span className="flex-1">{l.label}</span>
+                      {l.code === langCode && <Check className="h-3.5 w-3.5 text-primary" />}
+                    </button>
+                  ))}
+                </div>
+              )}
             </div>
             <button
               onClick={() => {
