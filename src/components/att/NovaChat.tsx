@@ -104,10 +104,10 @@ export function NovaChat({
         <button
           onClick={() => setOpen(true)}
           aria-label="Ask Nova"
-          className="absolute bottom-5 right-5 z-20 flex h-14 w-14 items-center justify-center rounded-full text-primary-foreground animate-float-soft"
+          className="absolute bottom-5 right-5 z-20 flex h-14 w-14 items-center justify-center rounded-full text-primary-foreground"
           style={{ backgroundImage: "var(--gradient-aurora)", boxShadow: "var(--shadow-glow)" }}
         >
-          <MessageCircle className="h-6 w-6" />
+          <MessageCircle className="h-6 w-6 animate-float-soft" />
           <span className="absolute -top-0.5 -right-0.5 h-3 w-3 rounded-full bg-success ring-2 ring-background" />
         </button>
       )}
