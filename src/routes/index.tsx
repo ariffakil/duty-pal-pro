@@ -216,14 +216,6 @@ function Index() {
               </header>
 
 
-              <NovaAvatar
-                text={latest?.text ?? ""}
-                tone={latest?.tone ?? "info"}
-                speaking={speaking}
-                voiceOn={voiceOn}
-                onToggleVoice={toggleVoice}
-                onReplay={() => latest && speak(latest.text)}
-              />
 
               {stage === "idle" || stage === "scanning" ? (
                 <FaceScan status={stage} progress={progress} onScan={startScan} />
