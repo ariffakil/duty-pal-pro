@@ -42,7 +42,7 @@ function Index() {
   const [progress, setProgress] = useState(0);
   const [clockInAt, setClockInAt] = useState<Date | null>(null);
   const [clockedOut, setClockedOut] = useState(false);
-  const [now, setNow] = useState(() => new Date());
+  const [now, setNow] = useState<Date | null>(null);
   const [messages, setMessages] = useState<BuddyMessage[]>([
     { id: 1, text: "Good morning, Ariff. Your duty starts at 10:00 in Karama, Dubai.", tone: "info" },
     { id: 2, text: "Traffic looks light — leave in 15 minutes to stay on time.", tone: "nudge" },
@@ -50,9 +50,11 @@ function Index() {
   const msgId = useRef(2);
 
   useEffect(() => {
+    setNow(new Date());
     const t = setInterval(() => setNow(new Date()), 1000);
     return () => clearInterval(t);
   }, []);
+
 
   const push = useCallback((text: string, tone: BuddyMessage["tone"] = "info") => {
     msgId.current += 1;
