@@ -182,7 +182,7 @@ export function NovaChat({
             </button>
           </div>
 
-          <div className="flex-1 space-y-3 overflow-y-auto px-5 pb-2">
+          <div className="no-scrollbar flex-1 space-y-3 overflow-y-auto px-5 pb-2">
             {msgs.map((m) =>
               m.from === "nova" ? (
                 <p key={m.id} className="max-w-[85%] text-sm leading-relaxed text-foreground/90">
