@@ -249,23 +249,41 @@ function Index() {
                   lateMinutes={lateMinutes}
                   onContinue={() => setStage("day")}
                 />
+              ) : stage === "summary" ? (
+                <DaySummary
+                  clockIn={clockInAt ? fmt(clockInAt) : "--:--"}
+                  clockOut={actualOutAt ? fmt(actualOutAt) : "--:--"}
+                  totalWorked={workedText}
+                  overtime={overtimeText}
+                  lateMinutes={lateMinutes}
+                  onDone={() => setStage("day")}
+                />
               ) : (
                 <ShiftDashboard
                   clockIn={clockInAt ? fmt(clockInAt) : "--:--"}
-                  clockOut={clockOutAt ? fmt(clockOutAt) : "--:--"}
+                  clockOut={
+                    actualOutAt ? fmt(actualOutAt) : clockOutAt ? fmt(clockOutAt) : "--:--"
+                  }
                   remaining={remaining}
                   percent={elapsed / totalMs}
                   lateMinutes={lateMinutes}
                   clockedOut={clockedOut}
                   onClockOut={() => {
+                    const out = new Date();
+                    const ms = clockInAt ? Math.max(0, out.getTime() - clockInAt.getTime()) : 0;
+                    const h = Math.floor(ms / 3600_000);
+                    const m = Math.floor((ms % 3600_000) / 60_000);
+                    setActualOutAt(out);
                     setClockedOut(true);
+                    setStage("summary");
                     push(
-                      `You have successfully clocked out. Total working hours ${clockInAt ? fmt(clockInAt) : "08:34"} to ${clockOutAt ? fmt(clockOutAt) : "18:25"}. Have a great evening, Sir!`,
+                      `You have successfully clocked out at ${fmt(out)}. Here is your summary for the day. Total working hours ${clockInAt ? fmt(clockInAt) : "08:34"} to ${fmt(out)}, that is ${h} hours and ${m} minutes. Have a great evening, Sir!`,
                       "cheer",
                     );
                   }}
                 />
               )}
+
 
               <AiBuddy messages={messages} />
             </div>
