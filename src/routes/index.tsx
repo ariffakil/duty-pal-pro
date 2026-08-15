@@ -66,6 +66,8 @@ function Index() {
   const [actualOutAt, setActualOutAt] = useState<Date | null>(null);
   const [now, setNow] = useState<Date | null>(null);
   const [requestKind, setRequestKind] = useState<RequestKind | null>(null);
+  const [pendingRequest, setPendingRequest] = useState<RequestKind | null>(null);
+
   const askedRef = useRef<{ late: boolean; leave: boolean }>({ late: false, leave: false });
   const lateMinutesRef = useRef(0);
   const [period, setPeriod] = useState<{
