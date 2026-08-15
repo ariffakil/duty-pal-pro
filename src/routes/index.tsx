@@ -156,10 +156,25 @@ function Index() {
       spokeRef.current = true;
       return;
     }
-    const next = "day" as const;
-    const t = setTimeout(() => setStage(next), spokeRef.current ? 1200 : 6000);
+    const wasSummary = stage === "summary";
+    const t = setTimeout(
+      () => {
+        if (wasSummary) {
+          // Shift finished: return to the home screen ready for the next day.
+          setStage("idle");
+          setClockInAt(null);
+          setActualOutAt(null);
+          setClockedOut(false);
+          setProgress(0);
+        } else {
+          setStage("day");
+        }
+      },
+      spokeRef.current ? 1200 : 6000,
+    );
     return () => clearTimeout(t);
   }, [stage, speaking]);
+
 
 
   useEffect(() => {
@@ -258,7 +273,14 @@ function Index() {
                   totalWorked={workedText}
                   overtime={overtimeText}
                   lateMinutes={lateMinutes}
-                  onDone={() => setStage("day")}
+                  onDone={() => {
+                    setStage("idle");
+                    setClockInAt(null);
+                    setActualOutAt(null);
+                    setClockedOut(false);
+                    setProgress(0);
+                  }}
+
                 />
               ) : (
                 <ShiftDashboard
