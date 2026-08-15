@@ -34,6 +34,9 @@ export const Route = createFileRoute("/")({
   component: Index,
 });
 
+/** Signed-in employee on this device. */
+const EMPLOYEE = { id: "EMP-1042", name: "Ariff" };
+
 const SHIFT_HOURS = 9;
 const SHIFT_START_MIN = 10 * 60; // 10:00
 
