@@ -10,6 +10,7 @@ import { AiBuddy, type BuddyMessage } from "@/components/att/AiBuddy";
 import { NovaAvatar } from "@/components/att/NovaAvatar";
 import { NovaChat } from "@/components/att/NovaChat";
 import { useNovaVoice } from "@/hooks/useNovaVoice";
+import { setNovaEmployee } from "@/lib/novaLang";
 
 export const Route = createFileRoute("/")({
   head: () => ({
