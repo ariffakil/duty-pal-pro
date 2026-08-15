@@ -16,7 +16,7 @@ function seeded(d: Date) {
 function buildDay(d: Date, today?: { in: string; out: string; hours: number; late: number }): PeriodDay {
   const weekend = d.getDay() === 0 || d.getDay() === 6;
   const base: PeriodDay = {
-    label: DAY_NAMES[d.getDay()],
+    label: DAY_NAMES[d.getDay()] ?? "",
     date: dateKey(d),
     in: "--:--",
     out: "--:--",
