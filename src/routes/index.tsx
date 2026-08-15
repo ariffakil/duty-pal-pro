@@ -248,7 +248,7 @@ function Index() {
             </div>
 
             <NovaChat
-              latest={latest ? { text: latest.text, tone: latest.tone } : undefined}
+              latest={latest ? { text: latest.text, tone: latest.tone ?? "info" } : undefined}
               speaking={speaking}
               voiceOn={voiceOn}
               onToggleVoice={toggleVoice}
