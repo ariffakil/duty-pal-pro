@@ -7,6 +7,7 @@ import { FaceScan } from "@/components/att/FaceScan";
 import { AttendanceResult } from "@/components/att/AttendanceResult";
 import { ShiftDashboard } from "@/components/att/ShiftDashboard";
 import { AiBuddy, type BuddyMessage } from "@/components/att/AiBuddy";
+import { NovaAvatar } from "@/components/att/NovaAvatar";
 import { NovaChat } from "@/components/att/NovaChat";
 import { useNovaVoice } from "@/hooks/useNovaVoice";
 import { setNovaEmployee } from "@/lib/novaLang";
@@ -215,6 +216,14 @@ function Index() {
               </header>
 
 
+              <NovaAvatar
+                text={latest?.text ?? ""}
+                tone={latest?.tone ?? "info"}
+                speaking={speaking}
+                voiceOn={voiceOn}
+                onToggleVoice={toggleVoice}
+                onReplay={() => latest && speak(latest.text)}
+              />
 
               {stage === "idle" || stage === "scanning" ? (
                 <FaceScan status={stage} progress={progress} onScan={startScan} />
@@ -247,12 +256,6 @@ function Index() {
             </div>
 
             <NovaChat
-              latest={latest ? { text: latest.text, tone: latest.tone ?? "info" } : undefined}
-              speaking={speaking}
-              voiceOn={voiceOn}
-              onToggleVoice={toggleVoice}
-              onReplay={() => latest && speak(latest.text)}
-
               context={{
                 name: "Ariff",
                 site: "Karama Branch, Dubai",

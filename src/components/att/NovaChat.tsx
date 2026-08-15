@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { X, Send, Mic, Square, Languages, Check, Volume2, VolumeX } from "lucide-react";
+import { X, Send, Mic, Square, Languages, Check } from "lucide-react";
 
 import { NovaMascot } from "@/components/att/NovaMascot";
 import novaAvatar from "@/assets/nova-avatar.png.asset.json";
@@ -70,21 +70,10 @@ const CHIPS = ["My duty time", "Am I late?", "Next reminder", "Time remaining"];
 export function NovaChat({
   context,
   onSpeak,
-  latest,
-  speaking = false,
-  voiceOn = true,
-  onToggleVoice,
-  onReplay,
 }: {
   context: NovaContext;
   onSpeak: (text: string) => void;
-  latest?: { text: string; tone?: "info" | "nudge" | "cheer" } | undefined;
-  speaking?: boolean | undefined;
-  voiceOn?: boolean | undefined;
-  onToggleVoice?: (() => void) | undefined;
-  onReplay?: (() => void) | undefined;
 }) {
-
   const [open, setOpen] = useState(false);
   const [input, setInput] = useState("");
   const [msgs, setMsgs] = useState<ChatMsg[]>([
@@ -169,51 +158,9 @@ export function NovaChat({
           style={{ right: pos.right, bottom: pos.bottom, touchAction: "none" }}
           className="absolute z-20 cursor-grab active:cursor-grabbing select-none"
         >
-          {latest?.text && (
-            <div className="absolute bottom-[76px] right-0 w-[264px] rounded-2xl rounded-br-md border border-primary/20 bg-secondary/70 p-3 backdrop-blur-xl">
-              <div className="flex items-center gap-2">
-                <p
-                  className={`font-display text-[10px] font-bold uppercase tracking-[0.18em] ${
-                    latest.tone === "nudge"
-                      ? "text-warning"
-                      : latest.tone === "cheer"
-                        ? "text-success"
-                        : "text-accent"
-                  }`}
-                >
-                  Nova AI
-                </p>
-                {speaking && (
-                  <span className="flex items-end gap-0.5">
-                    {[0, 1, 2].map((i) => (
-                      <span
-                        key={i}
-                        className="h-2 w-0.5 rounded-full bg-primary"
-                        style={{
-                          animation: "pulse 0.7s ease-in-out infinite",
-                          animationDelay: `${i * 0.15}s`,
-                        }}
-                      />
-                    ))}
-                  </span>
-                )}
-                <button
-                  onPointerDown={(e) => e.stopPropagation()}
-                  onClick={onToggleVoice}
-                  aria-label={voiceOn ? "Mute Nova voice" : "Unmute Nova voice"}
-                  className="ml-auto text-muted-foreground transition-colors hover:text-primary"
-                >
-                  {voiceOn ? <Volume2 className="h-3.5 w-3.5" /> : <VolumeX className="h-3.5 w-3.5" />}
-                </button>
-              </div>
-              <p className="mt-1 text-xs leading-snug text-foreground/85">{latest.text}</p>
-            </div>
-          )}
-
           <button
             onClick={() => {
               if (movedRef.current) return;
-              if (latest?.text && onReplay) onReplay();
               openChat();
             }}
             aria-label="Ask Nova by voice or text"
@@ -223,13 +170,10 @@ export function NovaChat({
               src={novaAvatar.url}
               alt="Nova AI assistant"
               draggable={false}
-              className={`h-20 w-20 object-contain drop-shadow-[0_10px_24px_rgba(0,0,0,0.45)] ${
-                speaking ? "animate-pulse-ring" : "animate-float-soft"
-              }`}
+              className="h-20 w-20 animate-float-soft object-contain drop-shadow-[0_10px_24px_rgba(0,0,0,0.45)]"
             />
             <span className="absolute right-2 top-2 h-3 w-3 rounded-full bg-success ring-2 ring-background" />
           </button>
-
         </div>
       )}
 
