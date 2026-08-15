@@ -93,8 +93,8 @@ function Index() {
       const late = at.getHours() * 60 + at.getMinutes() - SHIFT_START_MIN;
       push(
         late > 0
-          ? `Attendance marked at ${fmt(at)} — you are late by ${late} minutes. I logged the reason field for you.`
-          : `Attendance marked at ${fmt(at)} — you are on time. Great start!`,
+          ? `Thank you Sir. Your attendance is marked at ${fmt(at)} at Karama Branch. You are late today by ${String(Math.floor(late / 60)).padStart(2, "0")}:${String(late % 60).padStart(2, "0")} minutes.`
+          : `Thank you Sir. Your attendance is marked at ${fmt(at)} at Karama Branch. You are on time today.`,
         late > 0 ? "nudge" : "cheer",
       );
     }, 2000);
