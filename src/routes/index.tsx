@@ -59,6 +59,11 @@ function Index() {
   const msgId = useRef(2);
   const { speak, enabled: voiceOn, toggle: toggleVoice, speaking } = useNovaVoice();
 
+  // Nova remembers each signed-in employee's language on this device.
+  useEffect(() => {
+    setNovaEmployee(EMPLOYEE.id);
+  }, []);
+
   useEffect(() => {
     setNow(new Date());
     const t = setInterval(() => setNow(new Date()), 1000);
