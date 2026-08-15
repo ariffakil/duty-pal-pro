@@ -43,6 +43,7 @@ export function ShiftDashboard({
             status="idle"
             size={168}
             onTouch={onClockOut}
+            action="Clock out"
             label="Touch face to clock out"
           />
         )}
