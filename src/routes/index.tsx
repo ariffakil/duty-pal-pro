@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Bell, ChevronLeft, ShieldCheck, Wifi } from "lucide-react";
+import mytimeLogo from "@/assets/mytime-logo.png.asset.json";
 
 
 import { FaceScan } from "@/components/att/FaceScan";
@@ -311,6 +312,13 @@ function Index() {
                 <span className="font-medium text-foreground">{now ? fmt(now) : "--:--"}</span>
                 <span className="flex items-center gap-1.5">
                   <Wifi className="h-3.5 w-3.5" /> 5G
+                </span>
+              </div>
+
+              <div className="flex items-center gap-2 px-6 pt-3">
+                <img src={mytimeLogo.url} alt="MyTime attendance logo" className="h-8 w-8 object-contain" />
+                <span className="font-display text-sm font-bold uppercase tracking-[0.28em] text-foreground">
+                  MyTime
                 </span>
               </div>
 
