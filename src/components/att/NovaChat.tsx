@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
-import { MessageCircle, X, Send } from "lucide-react";
+import { MessageCircle, X, Send, Mic, Square } from "lucide-react";
 import novaAvatar from "@/assets/nova-avatar.png.asset.json";
+import { useSpeechInput } from "@/hooks/useSpeechInput";
 
 export type NovaContext = {
   name: string;
@@ -79,6 +80,8 @@ export function NovaChat({
   ]);
   const id = useRef(1);
   const endRef = useRef<HTMLDivElement>(null);
+  const askRef = useRef<(t: string) => void>(() => {});
+  const voice = useSpeechInput((t) => askRef.current(t));
 
   useEffect(() => {
     endRef.current?.scrollIntoView({ block: "nearest", behavior: "smooth" });
@@ -97,13 +100,19 @@ export function NovaChat({
     setInput("");
     onSpeak(reply);
   };
+  askRef.current = ask;
+
+  const openChat = () => {
+    setOpen(true);
+    if (voice.supported) voice.start();
+  };
 
   return (
     <>
       {!open && (
         <button
-          onClick={() => setOpen(true)}
-          aria-label="Ask Nova"
+          onClick={openChat}
+          aria-label="Ask Nova by voice or text"
           className="absolute bottom-5 right-5 z-20 flex h-14 w-14 items-center justify-center rounded-full text-primary-foreground"
           style={{ backgroundImage: "var(--gradient-aurora)", boxShadow: "var(--shadow-glow)" }}
         >
@@ -125,7 +134,10 @@ export function NovaChat({
               <p className="text-[11px] text-success">Online · shift assistant</p>
             </div>
             <button
-              onClick={() => setOpen(false)}
+              onClick={() => {
+                voice.stop();
+                setOpen(false);
+              }}
               aria-label="Close Nova chat"
               className="text-muted-foreground transition-colors hover:text-foreground"
             >
@@ -148,6 +160,12 @@ export function NovaChat({
                 </p>
               ),
             )}
+            {voice.listening && (
+              <p className="ml-auto max-w-[85%] rounded-2xl rounded-br-sm border border-primary/40 bg-primary/10 px-4 py-2 text-sm italic text-primary">
+                {voice.interim || "Listening…"}
+              </p>
+            )}
+            {voice.error && <p className="text-xs text-destructive">{voice.error}</p>}
             <div ref={endRef} />
           </div>
 
@@ -173,10 +191,25 @@ export function NovaChat({
             <input
               value={input}
               onChange={(e) => setInput(e.target.value)}
-              placeholder="Ask about duty time, lateness…"
+              placeholder={voice.listening ? "Listening… speak now" : "Ask or tap the mic to speak…"}
               aria-label="Ask Nova a question"
               className="flex-1 bg-transparent text-sm outline-none placeholder:text-muted-foreground"
             />
+            {voice.supported && (
+              <button
+                type="button"
+                onClick={voice.toggle}
+                aria-label={voice.listening ? "Stop listening" : "Ask Nova by voice"}
+                aria-pressed={voice.listening}
+                className={`flex h-9 w-9 items-center justify-center rounded-xl border transition-colors ${
+                  voice.listening
+                    ? "animate-pulse border-primary bg-primary/15 text-primary"
+                    : "border-border text-muted-foreground hover:text-primary"
+                }`}
+              >
+                {voice.listening ? <Square className="h-4 w-4" /> : <Mic className="h-4 w-4" />}
+              </button>
+            )}
             <button
               type="submit"
               aria-label="Send"
