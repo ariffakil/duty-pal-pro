@@ -273,7 +273,14 @@ function Index() {
                   totalWorked={workedText}
                   overtime={overtimeText}
                   lateMinutes={lateMinutes}
-                  onDone={() => setStage("day")}
+                  onDone={() => {
+                    setStage("idle");
+                    setClockInAt(null);
+                    setActualOutAt(null);
+                    setClockedOut(false);
+                    setProgress(0);
+                  }}
+
                 />
               ) : (
                 <ShiftDashboard
