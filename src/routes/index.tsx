@@ -67,6 +67,12 @@ function Index() {
   const [requestKind, setRequestKind] = useState<RequestKind | null>(null);
   const askedRef = useRef<{ late: boolean; leave: boolean }>({ late: false, leave: false });
   const lateMinutesRef = useRef(0);
+  const [period, setPeriod] = useState<{
+    scope: "week" | "month";
+    title: string;
+    range: string;
+    days: PeriodDay[];
+  } | null>(null);
 
 
 
@@ -251,6 +257,11 @@ function Index() {
     const t = setTimeout(
       () => {
         if (wasSummary) {
+          if (period) {
+            // Weekly / monthly attendance report on the last punch out.
+            setStage("period");
+            return;
+          }
           // Shift finished: return to the home screen ready for the next day.
           setStage("idle");
           setClockInAt(null);
