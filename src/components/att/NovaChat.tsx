@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from "react";
-import { MessageCircle, X, Send, Mic, Square, Languages, Check } from "lucide-react";
-import novaAvatar from "@/assets/nova-avatar.png.asset.json";
+import { X, Send, Mic, Square, Languages, Check } from "lucide-react";
+
+import { NovaMascot } from "@/components/att/NovaMascot";
+
 import { useSpeechInput } from "@/hooks/useSpeechInput";
 import { NOVA_LANGS, useNovaLang } from "@/lib/novaLang";
 
@@ -116,22 +118,20 @@ export function NovaChat({
         <button
           onClick={openChat}
           aria-label="Ask Nova by voice or text"
-          className="absolute bottom-5 right-5 z-20 flex h-14 w-14 items-center justify-center rounded-full text-primary-foreground"
+          className="absolute bottom-5 right-5 z-20 flex h-16 w-16 items-center justify-center rounded-full"
           style={{ backgroundImage: "var(--gradient-aurora)", boxShadow: "var(--shadow-glow)" }}
         >
-          <MessageCircle className="h-6 w-6 animate-float-soft" />
+          <NovaMascot className="h-12 w-12 animate-float-soft drop-shadow" />
           <span className="absolute -top-0.5 -right-0.5 h-3 w-3 rounded-full bg-success ring-2 ring-background" />
         </button>
       )}
 
+
       {open && (
         <div className="absolute inset-x-0 bottom-0 z-30 flex max-h-[78%] flex-col rounded-t-[2rem] border-t border-border bg-background/95 backdrop-blur-xl">
           <div className="flex items-center gap-3 px-5 pb-3 pt-4">
-            <img
-              src={novaAvatar.url}
-              alt="Nova AI assistant"
-              className="h-9 w-9 object-contain animate-float-soft"
-            />
+            <NovaMascot className="h-9 w-9 animate-float-soft" />
+
             <div className="flex-1">
               <p className="text-sm font-semibold">Ask Nova</p>
               <p className="text-[11px] text-success">
