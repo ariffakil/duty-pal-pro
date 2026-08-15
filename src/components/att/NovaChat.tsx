@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { X, Send, Mic, Square, Languages, Check } from "lucide-react";
+import { X, Send, Mic, Square, Languages, Check, Volume2, VolumeX } from "lucide-react";
 
 import { NovaMascot } from "@/components/att/NovaMascot";
 import novaAvatar from "@/assets/nova-avatar.png.asset.json";
