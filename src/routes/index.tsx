@@ -1,6 +1,7 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { Bell, ChevronLeft, Shield, Wifi } from "lucide-react";
+import { Bell, ChevronLeft, Shield, ShieldCheck, Wifi } from "lucide-react";
+
 
 import { FaceScan } from "@/components/att/FaceScan";
 import { AttendanceResult } from "@/components/att/AttendanceResult";
@@ -42,7 +43,7 @@ function Index() {
   const [progress, setProgress] = useState(0);
   const [clockInAt, setClockInAt] = useState<Date | null>(null);
   const [clockedOut, setClockedOut] = useState(false);
-  const [now, setNow] = useState(() => new Date());
+  const [now, setNow] = useState<Date | null>(null);
   const [messages, setMessages] = useState<BuddyMessage[]>([
     { id: 1, text: "Good morning, Ariff. Your duty starts at 10:00 in Karama, Dubai.", tone: "info" },
     { id: 2, text: "Traffic looks light — leave in 15 minutes to stay on time.", tone: "nudge" },
@@ -50,9 +51,11 @@ function Index() {
   const msgId = useRef(2);
 
   useEffect(() => {
+    setNow(new Date());
     const t = setInterval(() => setNow(new Date()), 1000);
     return () => clearInterval(t);
   }, []);
+
 
   const push = useCallback((text: string, tone: BuddyMessage["tone"] = "info") => {
     msgId.current += 1;
@@ -95,7 +98,9 @@ function Index() {
     : 0;
 
   const totalMs = SHIFT_HOURS * 3600_000;
-  const elapsed = clockInAt ? Math.min(totalMs, now.getTime() - clockInAt.getTime()) : 0;
+  const elapsed =
+    clockInAt && now ? Math.min(totalMs, now.getTime() - clockInAt.getTime()) : 0;
+
   const leftMs = Math.max(0, totalMs - elapsed);
   const remaining = {
     h: Math.floor(leftMs / 3600_000),
@@ -147,6 +152,13 @@ function Index() {
               </div>
             ))}
           </dl>
+          <Link
+            to="/admin"
+            className="mt-8 inline-flex items-center gap-2 rounded-xl border border-border bg-secondary/50 px-4 py-2.5 text-sm font-semibold transition-colors hover:text-primary"
+          >
+            <ShieldCheck className="h-4 w-4 text-primary" /> Open admin console
+          </Link>
+
         </section>
 
         <section className="relative">
@@ -159,7 +171,7 @@ function Index() {
           >
             <div className="relative max-h-[780px] overflow-y-auto rounded-[2.1rem] bg-background">
               <div className="flex items-center justify-between px-6 pt-4 text-xs text-muted-foreground">
-                <span className="font-medium text-foreground">{fmt(now)}</span>
+                <span className="font-medium text-foreground">{now ? fmt(now) : "--:--"}</span>
                 <span className="flex items-center gap-1.5">
                   <Wifi className="h-3.5 w-3.5" /> 5G
                 </span>
