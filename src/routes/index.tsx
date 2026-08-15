@@ -314,6 +314,13 @@ function Index() {
                 </span>
               </div>
 
+              <div className="flex items-center gap-2 px-6 pt-3">
+                <img src={mytimeLogo.url} alt="MyTime attendance logo" className="h-8 w-8 object-contain" />
+                <span className="font-display text-sm font-bold uppercase tracking-[0.28em] text-foreground">
+                  MyTime
+                </span>
+              </div>
+
               <header className="flex items-center gap-3 px-6 pb-1 pt-4">
                 {stage === "day" ? (
                   <button
