@@ -245,3 +245,11 @@
 @utility animate-spin-reverse {
   animation: spin-slow 26s linear infinite reverse;
 }
+
+@utility no-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
