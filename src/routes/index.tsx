@@ -161,14 +161,10 @@ function Index() {
       );
       if (late > 30 && !askedRef.current.late) {
         askedRef.current.late = true;
-        setTimeout(() => {
-          push(
-            `You are late by ${late} minutes. Would you like to send a reason for the delay to your Manager?`,
-            "nudge",
-          );
-          setRequestKind("late");
-        }, 5000);
+        // Queue it — it only opens once the thank-you message is done.
+        setPendingRequest("late");
       }
+
     }, 2000);
   };
 
