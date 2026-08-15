@@ -130,8 +130,24 @@ function Index() {
     s: Math.floor((leftMs % 60_000) / 1000),
   };
 
+  // Auto-close the verification popup once Nova finishes speaking.
+  const spokeRef = useRef(false);
+  useEffect(() => {
+    if (stage !== "verified") {
+      spokeRef.current = false;
+      return;
+    }
+    if (speaking) {
+      spokeRef.current = true;
+      return;
+    }
+    const t = setTimeout(() => setStage("day"), spokeRef.current ? 900 : 5000);
+    return () => clearTimeout(t);
+  }, [stage, speaking]);
+
   useEffect(() => {
     if (stage !== "day") return;
+
     const stand = setTimeout(
       () => push("You've been seated for 50 minutes. Please stand up and stretch for 2 minutes.", "nudge"),
       9000,
