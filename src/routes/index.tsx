@@ -6,6 +6,8 @@ import { Bell, ChevronLeft, ShieldCheck, Wifi } from "lucide-react";
 import { FaceScan } from "@/components/att/FaceScan";
 import { AttendanceResult } from "@/components/att/AttendanceResult";
 import { ShiftDashboard } from "@/components/att/ShiftDashboard";
+import { DaySummary } from "@/components/att/DaySummary";
+
 import { AiBuddy, type BuddyMessage } from "@/components/att/AiBuddy";
 import { NovaAvatar } from "@/components/att/NovaAvatar";
 import { NovaChat } from "@/components/att/NovaChat";
@@ -43,14 +45,16 @@ const SHIFT_START_MIN = 10 * 60; // 10:00
 const fmt = (d: Date) =>
   `${String(d.getHours()).padStart(2, "0")}:${String(d.getMinutes()).padStart(2, "0")}`;
 
-type Stage = "idle" | "scanning" | "verified" | "day";
+type Stage = "idle" | "scanning" | "verified" | "day" | "summary";
 
 function Index() {
   const [stage, setStage] = useState<Stage>("idle");
   const [progress, setProgress] = useState(0);
   const [clockInAt, setClockInAt] = useState<Date | null>(null);
   const [clockedOut, setClockedOut] = useState(false);
+  const [actualOutAt, setActualOutAt] = useState<Date | null>(null);
   const [now, setNow] = useState<Date | null>(null);
+
   const [messages, setMessages] = useState<BuddyMessage[]>([
     {
       id: 1,
@@ -130,10 +134,21 @@ function Index() {
     s: Math.floor((leftMs % 60_000) / 1000),
   };
 
-  // Auto-close the verification popup once Nova finishes speaking.
+  // Total worked for the day.
+  const workedMs =
+    clockInAt && actualOutAt ? Math.max(0, actualOutAt.getTime() - clockInAt.getTime()) : 0;
+  const workedText = `${String(Math.floor(workedMs / 3600_000)).padStart(2, "0")}h ${String(
+    Math.floor((workedMs % 3600_000) / 60_000),
+  ).padStart(2, "0")}m`;
+  const overtimeMs = Math.max(0, workedMs - SHIFT_HOURS * 3600_000);
+  const overtimeText = `${String(Math.floor(overtimeMs / 3600_000)).padStart(2, "0")}h ${String(
+    Math.floor((overtimeMs % 3600_000) / 60_000),
+  ).padStart(2, "0")}m`;
+
+  // Auto-close verification / day-summary popups once Nova finishes speaking.
   const spokeRef = useRef(false);
   useEffect(() => {
-    if (stage !== "verified") {
+    if (stage !== "verified" && stage !== "summary") {
       spokeRef.current = false;
       return;
     }
@@ -141,9 +156,11 @@ function Index() {
       spokeRef.current = true;
       return;
     }
-    const t = setTimeout(() => setStage("day"), spokeRef.current ? 900 : 5000);
+    const next = "day" as const;
+    const t = setTimeout(() => setStage(next), spokeRef.current ? 1200 : 6000);
     return () => clearTimeout(t);
   }, [stage, speaking]);
+
 
   useEffect(() => {
     if (stage !== "day") return;
@@ -234,23 +251,41 @@ function Index() {
                   lateMinutes={lateMinutes}
                   onContinue={() => setStage("day")}
                 />
+              ) : stage === "summary" ? (
+                <DaySummary
+                  clockIn={clockInAt ? fmt(clockInAt) : "--:--"}
+                  clockOut={actualOutAt ? fmt(actualOutAt) : "--:--"}
+                  totalWorked={workedText}
+                  overtime={overtimeText}
+                  lateMinutes={lateMinutes}
+                  onDone={() => setStage("day")}
+                />
               ) : (
                 <ShiftDashboard
                   clockIn={clockInAt ? fmt(clockInAt) : "--:--"}
-                  clockOut={clockOutAt ? fmt(clockOutAt) : "--:--"}
+                  clockOut={
+                    actualOutAt ? fmt(actualOutAt) : clockOutAt ? fmt(clockOutAt) : "--:--"
+                  }
                   remaining={remaining}
                   percent={elapsed / totalMs}
                   lateMinutes={lateMinutes}
                   clockedOut={clockedOut}
                   onClockOut={() => {
+                    const out = new Date();
+                    const ms = clockInAt ? Math.max(0, out.getTime() - clockInAt.getTime()) : 0;
+                    const h = Math.floor(ms / 3600_000);
+                    const m = Math.floor((ms % 3600_000) / 60_000);
+                    setActualOutAt(out);
                     setClockedOut(true);
+                    setStage("summary");
                     push(
-                      `You have successfully clocked out. Total working hours ${clockInAt ? fmt(clockInAt) : "08:34"} to ${clockOutAt ? fmt(clockOutAt) : "18:25"}. Have a great evening, Sir!`,
+                      `You have successfully clocked out at ${fmt(out)}. Here is your summary for the day. Total working hours ${clockInAt ? fmt(clockInAt) : "08:34"} to ${fmt(out)}, that is ${h} hours and ${m} minutes. Have a great evening, Sir!`,
                       "cheer",
                     );
                   }}
                 />
               )}
+
 
               <AiBuddy messages={messages} />
             </div>
