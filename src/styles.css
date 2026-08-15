@@ -214,3 +214,24 @@
   }
 }
 
+
+@utility glass-panel {
+  background-image: var(--gradient-surface);
+  border: 1px solid var(--color-border);
+  backdrop-filter: blur(18px) saturate(140%);
+  border-radius: var(--radius-2xl);
+}
+
+@keyframes spin-slow {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@utility animate-spin-slow {
+  animation: spin-slow 14s linear infinite;
+}
+
+@utility animate-spin-reverse {
+  animation: spin-slow 26s linear infinite reverse;
+}
