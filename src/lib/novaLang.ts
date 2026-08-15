@@ -37,12 +37,42 @@ export function detectLangFromText(text: string): string | null {
   return null;
 }
 
-const STORAGE_KEY = "nova.lang";
+const STORAGE_PREFIX = "nova.lang";
+/** Employee the saved language belongs to on this device. */
+let employeeId: string | null = null;
+const storageKey = (id = employeeId) => (id ? `${STORAGE_PREFIX}:${id}` : STORAGE_PREFIX);
 let current = "auto";
 /** Language heard in the last spoken question; overrides "auto". */
 let detected: string | null = null;
 const listeners = new Set<(v: string) => void>();
 const detectedListeners = new Set<(v: string | null) => void>();
+
+function readStored(id: string | null): string | null {
+  if (typeof window === "undefined") return null;
+  try {
+    return window.localStorage.getItem(storageKey(id));
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Binds Nova's language memory to the signed-in employee on this device, so
+ * each person keeps their own preferred voice after login.
+ */
+export function setNovaEmployee(id: string | null) {
+  if (employeeId === id) return;
+  employeeId = id;
+  const saved = readStored(id) ?? "auto";
+  setDetectedLang(null);
+  current = saved;
+  listeners.forEach((l) => l(saved));
+}
+
+export function getNovaEmployee() {
+  return employeeId;
+}
+
 
 export function setDetectedLang(code: string | null) {
   if (detected === code) return;
