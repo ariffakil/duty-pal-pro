@@ -34,6 +34,26 @@ export function FaceTouch({
           style={{ height: size + 54, width: size + 54 }}
         />
 
+        {status === "idle" && (
+          <>
+            {[0, 0.8, 1.6].map((delay) => (
+              <span
+                key={delay}
+                className="pointer-events-none absolute rounded-full border-2 border-primary/50 animate-pulse-ring"
+                style={{
+                  height: size + 8,
+                  width: size + 8,
+                  animationDelay: `${delay}s`,
+                }}
+              />
+            ))}
+            <span
+              className="pointer-events-none absolute rounded-full bg-primary/10 blur-xl animate-pulse-ring"
+              style={{ height: size, width: size, animationDelay: "0.4s" }}
+            />
+          </>
+        )}
+
         <button
           type="button"
           onClick={onTouch}
