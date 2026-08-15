@@ -15,6 +15,13 @@ import { NovaRequestSheet, type RequestKind } from "@/components/att/NovaRequest
 import { submitStaffRequest } from "@/lib/requests.functions";
 import { useNovaVoice } from "@/hooks/useNovaVoice";
 import { setNovaEmployee } from "@/lib/novaLang";
+import { PeriodSummary, type PeriodDay } from "@/components/att/PeriodSummary";
+import {
+  buildMonthReport,
+  buildWeekReport,
+  isLastPunchOfMonth,
+  isLastPunchOfWeek,
+} from "@/lib/periodReport";
 
 
 export const Route = createFileRoute("/")({
@@ -48,7 +55,7 @@ const SHIFT_START_MIN = 10 * 60; // 10:00
 const fmt = (d: Date) =>
   `${String(d.getHours()).padStart(2, "0")}:${String(d.getMinutes()).padStart(2, "0")}`;
 
-type Stage = "idle" | "scanning" | "verified" | "day" | "summary";
+type Stage = "idle" | "scanning" | "verified" | "day" | "summary" | "period";
 
 function Index() {
   const [stage, setStage] = useState<Stage>("idle");
@@ -60,6 +67,12 @@ function Index() {
   const [requestKind, setRequestKind] = useState<RequestKind | null>(null);
   const askedRef = useRef<{ late: boolean; leave: boolean }>({ late: false, leave: false });
   const lateMinutesRef = useRef(0);
+  const [period, setPeriod] = useState<{
+    scope: "week" | "month";
+    title: string;
+    range: string;
+    days: PeriodDay[];
+  } | null>(null);
 
 
 
@@ -244,6 +257,11 @@ function Index() {
     const t = setTimeout(
       () => {
         if (wasSummary) {
+          if (period) {
+            // Weekly / monthly attendance report on the last punch out.
+            setStage("period");
+            return;
+          }
           // Shift finished: return to the home screen ready for the next day.
           setStage("idle");
           setClockInAt(null);
@@ -257,7 +275,7 @@ function Index() {
       spokeRef.current ? 1200 : 6000,
     );
     return () => clearTimeout(t);
-  }, [stage, speaking]);
+  }, [stage, speaking, period]);
 
 
 
@@ -366,6 +384,21 @@ function Index() {
                   }}
 
                 />
+              ) : stage === "period" && period ? (
+                <PeriodSummary
+                  scope={period.scope}
+                  title={period.title}
+                  range={period.range}
+                  days={period.days}
+                  onDone={() => {
+                    setPeriod(null);
+                    setStage("idle");
+                    setClockInAt(null);
+                    setActualOutAt(null);
+                    setClockedOut(false);
+                    setProgress(0);
+                  }}
+                />
               ) : (
                 <ShiftDashboard
                   clockIn={clockInAt ? fmt(clockInAt) : "--:--"}
@@ -388,6 +421,35 @@ function Index() {
                       `You have successfully clocked out at ${fmt(out)}. Here is your summary for the day. Total working hours ${clockInAt ? fmt(clockInAt) : "08:34"} to ${fmt(out)}, that is ${h} hours and ${m} minutes. Have a great evening, Sir!`,
                       "cheer",
                     );
+
+                    // Last punch out of the week / month → period attendance report.
+                    const today = {
+                      in: clockInAt ? fmt(clockInAt) : fmt(out),
+                      out: fmt(out),
+                      hours: Math.round((ms / 3600_000) * 10) / 10,
+                      late: lateMinutes,
+                    };
+                    const monthEnd = isLastPunchOfMonth(out);
+                    const weekEnd = isLastPunchOfWeek(out);
+                    if (monthEnd || weekEnd) {
+                      const report = monthEnd
+                        ? buildMonthReport(out, today)
+                        : buildWeekReport(out, today);
+                      setPeriod({
+                        scope: monthEnd ? "month" : "week",
+                        title: monthEnd ? "Monthly attendance report" : "Weekly attendance report",
+                        range: report.range,
+                        days: report.days,
+                      });
+                      setTimeout(() => {
+                        push(
+                          monthEnd
+                            ? "Here is your monthly attendance summary report. Please review your total hours, overtime and late days for this month."
+                            : "It is the end of your work week. Here is your weekly attendance summary report.",
+                          "info",
+                        );
+                      }, 1200);
+                    }
                   }}
                 />
               )}
