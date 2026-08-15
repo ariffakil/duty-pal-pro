@@ -15,6 +15,13 @@ import { NovaRequestSheet, type RequestKind } from "@/components/att/NovaRequest
 import { submitStaffRequest } from "@/lib/requests.functions";
 import { useNovaVoice } from "@/hooks/useNovaVoice";
 import { setNovaEmployee } from "@/lib/novaLang";
+import { PeriodSummary, type PeriodDay } from "@/components/att/PeriodSummary";
+import {
+  buildMonthReport,
+  buildWeekReport,
+  isLastPunchOfMonth,
+  isLastPunchOfWeek,
+} from "@/lib/periodReport";
 
 
 export const Route = createFileRoute("/")({
@@ -48,7 +55,7 @@ const SHIFT_START_MIN = 10 * 60; // 10:00
 const fmt = (d: Date) =>
   `${String(d.getHours()).padStart(2, "0")}:${String(d.getMinutes()).padStart(2, "0")}`;
 
-type Stage = "idle" | "scanning" | "verified" | "day" | "summary";
+type Stage = "idle" | "scanning" | "verified" | "day" | "summary" | "period";
 
 function Index() {
   const [stage, setStage] = useState<Stage>("idle");
