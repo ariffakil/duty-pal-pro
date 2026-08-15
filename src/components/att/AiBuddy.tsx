@@ -1,4 +1,4 @@
-import { Bot, Send, Sparkles } from "lucide-react";
+import { Send, Sparkles } from "lucide-react";
 
 export type BuddyMessage = { id: number; text: string; tone?: "info" | "nudge" | "cheer" };
 
@@ -6,20 +6,11 @@ export function AiBuddy({ messages }: { messages: BuddyMessage[] }) {
   return (
     <div className="px-6 pb-10">
       <div className="surface-card overflow-hidden">
-        <div className="flex items-center gap-3 border-b border-border px-5 py-4">
-          <div
-            className="flex h-11 w-11 items-center justify-center rounded-2xl animate-float-soft"
-            style={{ backgroundImage: "var(--gradient-aurora)" }}
-          >
-            <Bot className="h-6 w-6 text-primary-foreground" />
-          </div>
-          <div>
-            <p className="text-sm font-semibold">
-              Nova <span className="gradient-text">AI Buddy</span>
-            </p>
-            <p className="text-xs text-muted-foreground">Your shift companion · always on</p>
-          </div>
-          <Sparkles className="ml-auto h-4 w-4 text-primary" />
+        <div className="flex items-center gap-2 border-b border-border px-5 py-3.5">
+          <Sparkles className="h-4 w-4 text-primary" />
+          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">
+            Nova activity timeline
+          </p>
         </div>
 
         <div className="space-y-3 px-5 py-4">
