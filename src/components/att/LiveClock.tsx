@@ -114,6 +114,51 @@ export function LiveClock({
         </>
       )}
 
+      {/* Minor tick marks */}
+      {Array.from({ length: 12 }).map((_, i) => {
+        if (i % 3 === 0) return null;
+        const a = i * 30;
+        const p0 = polar(a, 34);
+        const p1 = polar(a, 29);
+        return (
+          <line
+            key={i}
+            x1={p0.x}
+            y1={p0.y}
+            x2={p1.x}
+            y2={p1.y}
+            stroke="var(--color-muted-foreground)"
+            strokeWidth="1.4"
+            strokeLinecap="round"
+            opacity="0.55"
+          />
+        );
+      })}
+
+      {/* Numerals */}
+      {[
+        { n: 12, a: 0 },
+        { n: 3, a: 90 },
+        { n: 6, a: 180 },
+        { n: 9, a: 270 },
+      ].map(({ n, a }) => {
+        const p = polar(a, 31);
+        return (
+          <text
+            key={n}
+            x={p.x}
+            y={p.y}
+            textAnchor="middle"
+            dominantBaseline="central"
+            fontSize="9"
+            fontWeight="700"
+            fill="var(--color-muted-foreground)"
+          >
+            {n}
+          </text>
+        );
+      })}
+
       {/* Hands */}
       {hand(h * 30, 22, 2.6, "var(--color-foreground)")}
       {hand(m * 6, 32, 2.2, "var(--color-foreground)")}

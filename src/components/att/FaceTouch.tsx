@@ -15,7 +15,7 @@ type Props = {
 export function FaceTouch({
   status,
   onTouch,
-  size = 224,
+  size = 300,
   label,
   action = "Clock in",
   progress = 0,
@@ -32,36 +32,7 @@ export function FaceTouch({
 
   return (
     <div className="flex flex-col items-center">
-      <div className="relative flex items-center justify-center" style={{ height: size + 56, width: size + 56 }}>
-        <span
-          className="absolute rounded-full border border-primary/15 animate-spin-slow"
-          style={{ height: size + 24, width: size + 24 }}
-        />
-        <span
-          className="absolute rounded-full border border-dashed border-accent/15 animate-spin-reverse"
-          style={{ height: size + 54, width: size + 54 }}
-        />
-
-        {(status === "idle" || status === "failed") && (
-          <>
-            {[0, 0.8, 1.6].map((delay) => (
-              <span
-                key={delay}
-                className="pointer-events-none absolute rounded-full border-2 border-primary/50 animate-pulse-ring"
-                style={{
-                  height: size + 8,
-                  width: size + 8,
-                  animationDelay: `${delay}s`,
-                }}
-              />
-            ))}
-            <span
-              className="pointer-events-none absolute rounded-full bg-primary/10 blur-xl animate-pulse-ring"
-              style={{ height: size, width: size, animationDelay: "0.4s" }}
-            />
-          </>
-        )}
-
+      <div className="relative flex items-center justify-center" style={{ height: size + 16, width: size + 16 }}>
         <button
           type="button"
           onClick={onTouch}
@@ -99,7 +70,7 @@ export function FaceTouch({
             />
           </svg>
 
-          <span className="relative flex flex-col items-center">
+          <span className="relative flex flex-col items-center justify-center">
             {status === "verified" ? (
               <ShieldCheck
                 className="h-16 w-16 text-success drop-shadow-[0_0_12px_var(--color-success)]"
@@ -111,22 +82,8 @@ export function FaceTouch({
                 strokeWidth={1.4}
               />
             ) : (
-              <LiveClock size={size * 0.42} tone="accent" />
-
+              <LiveClock size={size * 0.92} tone="accent" />
             )}
-            <span
-              className={`mt-3 font-display text-xs font-bold uppercase tracking-[0.24em] ${
-                status === "failed" ? "text-destructive" : status === "verified" ? "text-success" : "text-accent"
-              }`}
-            >
-              {status === "scanning"
-                ? "Looking…"
-                : status === "verified"
-                  ? "Face verified"
-                  : status === "failed"
-                    ? "Try again"
-                    : action}
-            </span>
           </span>
 
           {status === "scanning" && (
@@ -141,17 +98,24 @@ export function FaceTouch({
                   }}
                 />
               </span>
-              {[0, 0.5, 1].map((d) => (
-                <span
-                  key={d}
-                  className="pointer-events-none absolute rounded-full border border-primary/40 animate-pulse-ring"
-                  style={{ height: size, width: size, animationDelay: `${d}s` }}
-                />
-              ))}
             </>
           )}
         </button>
       </div>
+
+      <span
+        className={`mt-4 font-display text-xs font-bold uppercase tracking-[0.24em] ${
+          status === "failed" ? "text-destructive" : status === "verified" ? "text-success" : "text-accent"
+        }`}
+      >
+        {status === "scanning"
+          ? "Looking…"
+          : status === "verified"
+            ? "Face verified"
+            : status === "failed"
+              ? "Try again"
+              : action}
+      </span>
 
       {label && (
         <p className="mt-1 text-[11px] font-medium uppercase tracking-[0.28em] text-muted-foreground">
