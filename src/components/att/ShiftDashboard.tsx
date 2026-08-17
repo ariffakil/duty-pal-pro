@@ -1,5 +1,7 @@
-import { LogIn, LogOut, MapPin, Coffee, CalendarDays, Fingerprint } from "lucide-react";
+import { MapPin, Coffee, CalendarDays, Fingerprint } from "lucide-react";
 import { FaceTouch } from "./FaceTouch";
+import { AnalogClock } from "./AnalogClock";
+
 
 type Props = {
   clockIn: string;
