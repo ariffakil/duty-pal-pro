@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useSmartReminders } from "@/hooks/useSmartReminders";
 import { Bell, ChevronLeft, ShieldCheck, Wifi } from "lucide-react";
 import mytimeLogo from "@/assets/mytime-logo.png.asset.json";
 
@@ -52,6 +53,8 @@ const EMPLOYEE = { id: "EMP-1042", name: "Ariff" };
 
 const SHIFT_HOURS = 9;
 const SHIFT_START_MIN = 10 * 60; // 10:00
+const SHIFT_END_MIN = SHIFT_START_MIN + SHIFT_HOURS * 60;
+const BRANCH = "Karama Branch";
 
 const fmt = (d: Date) =>
   `${String(d.getHours()).padStart(2, "0")}:${String(d.getMinutes()).padStart(2, "0")}`;
@@ -109,34 +112,6 @@ function Index() {
     },
     [speak],
   );
-
-  // Daily 06:00 morning briefing — spoken once per day, per employee, per device.
-  useEffect(() => {
-    const KEY = `nova.morningBriefing.${EMPLOYEE.id}`;
-    const check = () => {
-      const d = new Date();
-      const today = d.toDateString();
-      if (d.getHours() < 6) return;
-      // Keep it a morning greeting (06:00 - 09:59 window).
-      if (d.getHours() >= 10) return;
-      try {
-        if (localStorage.getItem(KEY) === today) return;
-        localStorage.setItem(KEY, today);
-      } catch {
-        return;
-      }
-      push(
-        `Good morning ${EMPLOYEE.name}. Your duty hours today are morning 8:30 to evening 6:30 at Karama Branch.`,
-        "info",
-      );
-    };
-    check();
-    const t = setInterval(check, 60_000);
-    return () => clearInterval(t);
-  }, [push]);
-
-
-  const attemptRef = useRef(0);
 
   const startScan = () => {
     attemptRef.current += 1;
@@ -292,22 +267,17 @@ function Index() {
 
 
 
-  useEffect(() => {
-    if (stage !== "day") return;
-
-    const stand = setTimeout(
-      () => push("You've been seated for 50 minutes. Please stand up and stretch for 2 minutes.", "nudge"),
-      9000,
-    );
-    const evening = setTimeout(
-      () => push("Good evening. Your duty ends in 00:30 minutes. Please wrap up your tasks.", "info"),
-      18000,
-    );
-    return () => {
-      clearTimeout(stand);
-      clearTimeout(evening);
-    };
-  }, [stage, push]);
+  // Smart-watch style reminders driven by the employee's schedule.
+  useSmartReminders({
+    employeeId: EMPLOYEE.id,
+    employeeName: EMPLOYEE.name,
+    branch: BRANCH,
+    startMin: SHIFT_START_MIN,
+    endMin: SHIFT_END_MIN,
+    clockInAt,
+    clockedOut,
+    onRemind: push,
+  });
 
   return (
     <main className="relative min-h-screen overflow-hidden bg-background">
