@@ -11,7 +11,7 @@ import { ShiftDashboard } from "@/components/att/ShiftDashboard";
 import { DaySummary } from "@/components/att/DaySummary";
 
 import { AiBuddy, type BuddyMessage } from "@/components/att/AiBuddy";
-import { NovaAvatar } from "@/components/att/NovaAvatar";
+import { NovaPopup } from "@/components/att/NovaPopup";
 import { NovaChat } from "@/components/att/NovaChat";
 import { NovaRequestSheet, type RequestKind } from "@/components/att/NovaRequestSheet";
 import { submitStaffRequest } from "@/lib/requests.functions";
@@ -90,6 +90,27 @@ function Index() {
   ]);
   const msgId = useRef(2);
   const { speak, enabled: voiceOn, toggle: toggleVoice, speaking } = useNovaVoice();
+
+  // Nova only appears when she has something to say, then hides again.
+  const [novaOpen, setNovaOpen] = useState(false);
+  const novaSpokeRef = useRef(false);
+
+  useEffect(() => {
+    if (messages.length <= 2) return;
+    novaSpokeRef.current = false;
+    setNovaOpen(true);
+  }, [messages]);
+
+  useEffect(() => {
+    if (!novaOpen) return;
+    if (speaking) {
+      novaSpokeRef.current = true;
+      return;
+    }
+    const t = setTimeout(() => setNovaOpen(false), novaSpokeRef.current ? 1400 : 7000);
+    return () => clearTimeout(t);
+  }, [novaOpen, speaking, messages]);
+
 
   // Nova remembers each signed-in employee's language on this device.
   useEffect(() => {
@@ -344,14 +365,16 @@ function Index() {
               </header>
 
 
-              <NovaAvatar
+              <NovaPopup
+                open={novaOpen}
                 text={latest?.text ?? ""}
                 tone={latest?.tone ?? "info"}
                 speaking={speaking}
                 voiceOn={voiceOn}
                 onToggleVoice={toggleVoice}
-                onReplay={() => latest && speak(latest.text)}
+                onClose={() => setNovaOpen(false)}
               />
+
 
               {stage === "idle" || stage === "scanning" || stage === "failed" ? (
                 <FaceScan status={stage} progress={progress} onScan={startScan} />
