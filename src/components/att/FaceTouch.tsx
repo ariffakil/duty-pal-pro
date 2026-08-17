@@ -1,4 +1,6 @@
-import { ScanFace, ShieldCheck } from "lucide-react";
+import { ShieldCheck } from "lucide-react";
+import { LiveClock } from "./LiveClock";
+
 
 type Props = {
   status: "idle" | "scanning" | "verified";
