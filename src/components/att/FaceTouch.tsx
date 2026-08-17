@@ -96,10 +96,8 @@ export function FaceTouch({
                 strokeWidth={1.3}
               />
             ) : (
-              <ScanFace
-                className="h-20 w-20 text-accent drop-shadow-[0_0_12px_var(--color-primary)]"
-                strokeWidth={1}
-              />
+              <LiveClock size={size * 0.42} tone="accent" />
+
             )}
             <span className="mt-3 font-display text-xs font-bold uppercase tracking-[0.24em] text-accent">
               {status === "scanning" ? "Verifying" : status === "verified" ? "Verified" : action}
