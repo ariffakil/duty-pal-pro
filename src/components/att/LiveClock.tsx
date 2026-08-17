@@ -37,9 +37,14 @@ export function LiveClock({
   dutyEndMin,
   showDuty = true,
 }: Props) {
-  const [now, setNow] = useState(() => new Date());
+  // Start from a fixed time so SSR and the first client render match, then
+  // switch to the real clock after mount.
+  const [now, setNow] = useState(() => new Date(2020, 0, 1, 0, 0, 0));
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
+    setMounted(true);
+    setNow(new Date());
     const id = setInterval(() => setNow(new Date()), 1000);
     return () => clearInterval(id);
   }, []);
