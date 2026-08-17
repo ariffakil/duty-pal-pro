@@ -113,6 +113,8 @@ function Index() {
     [speak],
   );
 
+  const attemptRef = useRef(0);
+
   const startScan = () => {
     attemptRef.current += 1;
     setStage("scanning");
