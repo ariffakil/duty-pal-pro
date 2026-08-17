@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { dutyGradient, resolveDuty } from "@/lib/dutyRoster";
+import { dutyGradient, fmtMin, resolveDuty } from "@/lib/dutyRoster";
 
 type Props = {
   size?: number;
@@ -50,6 +50,12 @@ export function LiveClock({
   const end = dutyEndMin ?? duty.window?.endMin;
   const [g0, g1] = dutyGradient(duty.phase);
   const hasDuty = showDuty && start != null && end != null;
+
+  const nowMin = now.getHours() * 60 + now.getMinutes() + now.getSeconds() / 60;
+  const elapsedEnd =
+    start != null && end != null && duty.phase === "active"
+      ? Math.min(nowMin, end)
+      : null;
 
   const s = now.getSeconds();
   const m = now.getMinutes() + s / 60;
@@ -158,6 +164,42 @@ export function LiveClock({
           </text>
         );
       })}
+
+      {/* Inner duty ring — today's actual duty window, filled as it elapses */}
+      {hasDuty && (
+        <>
+          <path
+            d={arcPath(start!, end!, 26)}
+            fill="none"
+            stroke="var(--color-success)"
+            strokeWidth="1.6"
+            strokeLinecap="round"
+            opacity="0.28"
+          />
+          {elapsedEnd != null && elapsedEnd > start! && (
+            <path
+              d={arcPath(start!, elapsedEnd, 26)}
+              fill="none"
+              stroke="var(--color-success)"
+              strokeWidth="1.6"
+              strokeLinecap="round"
+            />
+          )}
+          <text
+            x="50"
+            y="68"
+            textAnchor="middle"
+            dominantBaseline="central"
+            fontSize="6"
+            fontWeight="600"
+            letterSpacing="0.4"
+            fill="var(--color-success)"
+            opacity="0.9"
+          >
+            {`${fmtMin(start!)} – ${fmtMin(end!)}`}
+          </text>
+        </>
+      )}
 
       {/* Hands */}
       {hand(h * 30, 22, 1.5, "var(--color-foreground)")}
