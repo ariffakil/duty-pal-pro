@@ -1,5 +1,7 @@
-import { LogIn, LogOut, MapPin, Coffee, CalendarDays, Fingerprint } from "lucide-react";
+import { MapPin, Coffee, CalendarDays, Fingerprint } from "lucide-react";
 import { FaceTouch } from "./FaceTouch";
+import { AnalogClock } from "./AnalogClock";
+
 
 type Props = {
   clockIn: string;
@@ -52,19 +54,20 @@ export function ShiftDashboard({
       <div className="mt-6 grid grid-cols-2 gap-3">
         <div className="rounded-2xl border border-border bg-secondary/30 p-4">
           <p className="flex items-center gap-1.5 text-[11px] uppercase tracking-wider text-muted-foreground">
-            <LogIn className="h-3.5 w-3.5 text-success" /> Clock in
+            <AnalogClock time={clockIn} tone="success" /> Clock in
           </p>
           <p className="mt-1 font-display text-2xl font-semibold tabular-nums">{clockIn}</p>
         </div>
         <div className="rounded-2xl border border-border bg-secondary/30 p-4">
           <p className="flex items-center gap-1.5 text-[11px] uppercase tracking-wider text-muted-foreground">
-            <LogOut className="h-3.5 w-3.5 text-accent" /> Clock out
+            <AnalogClock time={clockedOut ? clockOut : "--:--"} tone="accent" /> Clock out
           </p>
           <p className="mt-1 font-display text-2xl font-semibold tabular-nums text-muted-foreground">
             {clockedOut ? clockOut : "--:--"}
           </p>
         </div>
       </div>
+
 
       <p className="mt-4 flex items-center gap-2 text-xs text-muted-foreground">
         <MapPin className="h-3.5 w-3.5 text-primary" /> Karama, Dubai · Gate 2 reader
