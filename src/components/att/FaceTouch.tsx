@@ -38,11 +38,11 @@ export function FaceTouch({
           onClick={onTouch}
           disabled={status === "scanning" || status === "verified"}
           aria-label={label ?? "Touch face to verify"}
-          className="group relative flex items-center justify-center rounded-full border-4 border-secondary bg-background transition-transform active:scale-95 disabled:cursor-default"
+          className="group relative flex items-center justify-center rounded-full border border-secondary/70 bg-background transition-transform active:scale-95 disabled:cursor-default"
           style={{ height: size, width: size, boxShadow: "var(--shadow-glow)" }}
         >
           <span
-            className={`absolute inset-2 rounded-full border-2 ${
+            className={`absolute inset-2 rounded-full border ${
               status === "verified"
                 ? "border-success/50"
                 : status === "failed"
@@ -61,7 +61,7 @@ export function FaceTouch({
               r={r}
               fill="none"
               stroke={stroke}
-              strokeWidth="4"
+              strokeWidth="2"
               strokeLinecap="round"
               strokeDasharray={circ}
               strokeDashoffset={circ * (1 - pct)}
