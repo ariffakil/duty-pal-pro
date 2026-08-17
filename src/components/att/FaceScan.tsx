@@ -1,4 +1,4 @@
-import { MapPin, Loader2, Lock } from "lucide-react";
+import { MapPin, Loader2 } from "lucide-react";
 import { FaceTouch } from "./FaceTouch";
 import { VerifyProgress } from "./VerifyProgress";
 
