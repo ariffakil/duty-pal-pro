@@ -54,7 +54,7 @@ export function LiveClock({
   const start = dutyStartMin ?? duty.window?.startMin;
   const end = dutyEndMin ?? duty.window?.endMin;
   const [g0, g1] = dutyGradient(duty.phase);
-  const hasDuty = showDuty && start != null && end != null;
+  const hasDuty = mounted && showDuty && start != null && end != null;
 
   const nowMin = now.getHours() * 60 + now.getMinutes() + now.getSeconds() / 60;
   const elapsedEnd =

@@ -472,7 +472,7 @@ function Index() {
               )}
 
 
-              <AiBuddy messages={messages} />
+              
 
               {requestKind && (
                 <NovaRequestSheet
