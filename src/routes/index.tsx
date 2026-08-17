@@ -56,7 +56,7 @@ const SHIFT_START_MIN = 10 * 60; // 10:00
 const fmt = (d: Date) =>
   `${String(d.getHours()).padStart(2, "0")}:${String(d.getMinutes()).padStart(2, "0")}`;
 
-type Stage = "idle" | "scanning" | "verified" | "day" | "summary" | "period";
+type Stage = "idle" | "scanning" | "failed" | "verified" | "day" | "summary" | "period";
 
 function Index() {
   const [stage, setStage] = useState<Stage>("idle");
@@ -136,7 +136,10 @@ function Index() {
   }, [push]);
 
 
+  const attemptRef = useRef(0);
+
   const startScan = () => {
+    attemptRef.current += 1;
     setStage("scanning");
     setProgress(0);
     const t = setInterval(() => {
@@ -149,6 +152,15 @@ function Index() {
       });
     }, 70);
     setTimeout(() => {
+      // Simulated biometric match: an occasional first attempt fails so the
+      // employee sees the retry state.
+      const failed = attemptRef.current === 1 && Math.random() < 0.25;
+      if (failed) {
+        setStage("failed");
+        setProgress(0);
+        push("I could not verify your face clearly. Please face the camera and try again.", "nudge");
+        return;
+      }
       const at = new Date();
       setClockInAt(at);
       setStage("verified");
@@ -369,7 +381,7 @@ function Index() {
                 onReplay={() => latest && speak(latest.text)}
               />
 
-              {stage === "idle" || stage === "scanning" ? (
+              {stage === "idle" || stage === "scanning" || stage === "failed" ? (
                 <FaceScan status={stage} progress={progress} onScan={startScan} />
               ) : stage === "verified" ? (
                 <AttendanceResult
