@@ -59,11 +59,10 @@ export function resolveDuty(now: Date = new Date()): ResolvedDuty {
 export const dutyGradient = (phase: DutyPhase): [string, string] => {
   switch (phase) {
     case "active":
-      return ["var(--color-success)", "var(--color-accent)"];
     case "before":
-      return ["var(--color-primary)", "var(--color-accent)"];
     case "tomorrow":
-      return ["var(--color-accent)", "var(--color-primary)"];
+      // Duty hours are always marked green on the dial.
+      return ["var(--color-success)", "var(--color-success)"];
     default:
       return ["var(--color-muted-foreground)", "var(--color-muted-foreground)"];
   }

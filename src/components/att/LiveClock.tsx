@@ -87,8 +87,8 @@ export function LiveClock({
         r="42"
         fill="none"
         stroke="var(--color-muted-foreground)"
-        strokeWidth="1"
-        opacity="0.25"
+        strokeWidth="1.4"
+        opacity="0.3"
       />
 
       {/* Duty-hours arc */}
