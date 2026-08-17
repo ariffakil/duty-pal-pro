@@ -58,10 +58,6 @@ export function FaceScan({ status, progress, onScan }: Props) {
           <MapPin className="h-3.5 w-3.5 text-primary" />
         )}
       </div>
-
-      <p className="mt-3 flex items-center gap-1.5 text-[11px] text-muted-foreground">
-        <Lock className="h-3 w-3" /> Encrypted on-device face template
-      </p>
     </div>
   );
 }
