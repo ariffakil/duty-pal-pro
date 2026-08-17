@@ -87,8 +87,8 @@ export function LiveClock({
         r="42"
         fill="none"
         stroke="var(--color-muted-foreground)"
-        strokeWidth="3"
-        opacity="0.22"
+        strokeWidth="1"
+        opacity="0.25"
       />
 
       {/* Duty-hours arc */}
@@ -98,9 +98,9 @@ export function LiveClock({
             d={arcPath(start!, end!, 42)}
             fill="none"
             stroke="url(#lc-duty)"
-            strokeWidth="9"
+            strokeWidth="6"
             strokeLinecap="round"
-            opacity="0.16"
+            opacity="0.12"
           />
           <path
             d={arcPath(start!, end!, 42)}
@@ -108,7 +108,7 @@ export function LiveClock({
             stroke="url(#lc-duty)"
             strokeDasharray={duty.phase === "tomorrow" ? "3 3" : undefined}
             opacity={duty.phase === "tomorrow" ? 0.75 : 1}
-            strokeWidth="4"
+            strokeWidth="2"
             strokeLinecap="round"
           />
         </>
@@ -128,7 +128,7 @@ export function LiveClock({
             x2={p1.x}
             y2={p1.y}
             stroke="var(--color-muted-foreground)"
-            strokeWidth="1.4"
+            strokeWidth="0.8"
             strokeLinecap="round"
             opacity="0.55"
           />
@@ -151,7 +151,7 @@ export function LiveClock({
             textAnchor="middle"
             dominantBaseline="central"
             fontSize="9"
-            fontWeight="700"
+            fontWeight="500"
             fill="var(--color-muted-foreground)"
           >
             {n}
@@ -160,11 +160,11 @@ export function LiveClock({
       })}
 
       {/* Hands */}
-      {hand(h * 30, 22, 2.6, "var(--color-foreground)")}
-      {hand(m * 6, 32, 2.2, "var(--color-foreground)")}
-      {hand(s * 6, 34, 0.8, "var(--color-accent)", 4)}
+      {hand(h * 30, 22, 1.5, "var(--color-foreground)")}
+      {hand(m * 6, 32, 1.1, "var(--color-foreground)")}
+      {hand(s * 6, 35, 0.5, "var(--color-accent)", 4)}
 
-      <circle cx="50" cy="50" r="4" fill="var(--color-background)" stroke="var(--color-accent)" strokeWidth="1.6" />
+      <circle cx="50" cy="50" r="2.4" fill="var(--color-background)" stroke="var(--color-accent)" strokeWidth="0.9" />
     </svg>
   );
 }
