@@ -22,7 +22,7 @@ export function FaceTouch({
 }: Props) {
   const r = size / 2 - 6;
   const circ = 2 * Math.PI * r;
-  const pct = status === "verified" ? 1 : status === "failed" ? 1 : progress / 100;
+  const pct = status === "scanning" ? progress / 100 : 1;
   const stroke =
     status === "verified"
       ? "var(--color-success)"
