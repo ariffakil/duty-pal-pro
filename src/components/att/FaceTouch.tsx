@@ -1,9 +1,9 @@
-import { ShieldCheck } from "lucide-react";
+import { ShieldCheck, RotateCcw } from "lucide-react";
 import { LiveClock } from "./LiveClock";
 
 
 type Props = {
-  status: "idle" | "scanning" | "verified";
+  status: "idle" | "scanning" | "verified" | "failed";
   onTouch: () => void;
   size?: number;
   label?: string;
@@ -22,7 +22,13 @@ export function FaceTouch({
 }: Props) {
   const r = size / 2 - 6;
   const circ = 2 * Math.PI * r;
-  const pct = status === "verified" ? 1 : progress / 100;
+  const pct = status === "verified" ? 1 : status === "failed" ? 1 : progress / 100;
+  const stroke =
+    status === "verified"
+      ? "var(--color-success)"
+      : status === "failed"
+        ? "var(--color-destructive)"
+        : "var(--color-primary)";
 
   return (
     <div className="flex flex-col items-center">
@@ -36,7 +42,7 @@ export function FaceTouch({
           style={{ height: size + 54, width: size + 54 }}
         />
 
-        {status === "idle" && (
+        {(status === "idle" || status === "failed") && (
           <>
             {[0, 0.8, 1.6].map((delay) => (
               <span
@@ -59,14 +65,18 @@ export function FaceTouch({
         <button
           type="button"
           onClick={onTouch}
-          disabled={status !== "idle"}
+          disabled={status === "scanning" || status === "verified"}
           aria-label={label ?? "Touch face to verify"}
           className="group relative flex items-center justify-center rounded-full border-4 border-secondary bg-background transition-transform active:scale-95 disabled:cursor-default"
           style={{ height: size, width: size, boxShadow: "var(--shadow-glow)" }}
         >
           <span
             className={`absolute inset-2 rounded-full border-2 ${
-              status === "verified" ? "border-success/50" : "border-primary/30"
+              status === "verified"
+                ? "border-success/50"
+                : status === "failed"
+                  ? "border-destructive/60"
+                  : "border-primary/30"
             }`}
           />
 
@@ -79,7 +89,7 @@ export function FaceTouch({
               cy={size / 2}
               r={r}
               fill="none"
-              stroke={status === "verified" ? "var(--color-success)" : "var(--color-primary)"}
+              stroke={stroke}
               strokeWidth="4"
               strokeLinecap="round"
               strokeDasharray={circ}
@@ -95,12 +105,27 @@ export function FaceTouch({
                 className="h-16 w-16 text-success drop-shadow-[0_0_12px_var(--color-success)]"
                 strokeWidth={1.3}
               />
+            ) : status === "failed" ? (
+              <RotateCcw
+                className="h-14 w-14 animate-scale-in text-destructive drop-shadow-[0_0_12px_var(--color-destructive)]"
+                strokeWidth={1.4}
+              />
             ) : (
               <LiveClock size={size * 0.42} tone="accent" />
 
             )}
-            <span className="mt-3 font-display text-xs font-bold uppercase tracking-[0.24em] text-accent">
-              {status === "scanning" ? "Verifying" : status === "verified" ? "Verified" : action}
+            <span
+              className={`mt-3 font-display text-xs font-bold uppercase tracking-[0.24em] ${
+                status === "failed" ? "text-destructive" : status === "verified" ? "text-success" : "text-accent"
+              }`}
+            >
+              {status === "scanning"
+                ? "Looking…"
+                : status === "verified"
+                  ? "Face verified"
+                  : status === "failed"
+                    ? "Try again"
+                    : action}
             </span>
           </span>
 
@@ -130,7 +155,11 @@ export function FaceTouch({
 
       {label && (
         <p className="mt-1 text-[11px] font-medium uppercase tracking-[0.28em] text-muted-foreground">
-          {status === "scanning" ? "Verifying…" : label}
+          {status === "scanning"
+            ? "Hold still — looking…"
+            : status === "failed"
+              ? "Face not recognised · tap to retry"
+              : label}
         </p>
       )}
     </div>
