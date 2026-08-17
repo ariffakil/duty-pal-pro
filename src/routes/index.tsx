@@ -10,7 +10,7 @@ import { AttendanceResult } from "@/components/att/AttendanceResult";
 import { ShiftDashboard } from "@/components/att/ShiftDashboard";
 import { DaySummary } from "@/components/att/DaySummary";
 
-import { AiBuddy, type BuddyMessage } from "@/components/att/AiBuddy";
+import type { BuddyMessage } from "@/components/att/AiBuddy";
 import { NovaPopup } from "@/components/att/NovaPopup";
 import { NovaChat } from "@/components/att/NovaChat";
 import { NovaRequestSheet, type RequestKind } from "@/components/att/NovaRequestSheet";
@@ -472,7 +472,7 @@ function Index() {
               )}
 
 
-              <AiBuddy messages={messages} />
+              
 
               {requestKind && (
                 <NovaRequestSheet
