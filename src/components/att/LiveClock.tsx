@@ -1,4 +1,5 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { dutyGradient, resolveDuty } from "@/lib/dutyRoster";
 
 type Props = {
   size?: number;
@@ -32,8 +33,8 @@ function arcPath(startMin: number, endMin: number, r: number) {
  */
 export function LiveClock({
   size = 92,
-  dutyStartMin = 8 * 60 + 30,
-  dutyEndMin = 18 * 60,
+  dutyStartMin,
+  dutyEndMin,
   showDuty = true,
 }: Props) {
   const [now, setNow] = useState(() => new Date());
@@ -42,6 +43,13 @@ export function LiveClock({
     const id = setInterval(() => setNow(new Date()), 1000);
     return () => clearInterval(id);
   }, []);
+
+  // Real duty window for today — or tomorrow's once today's shift is done.
+  const duty = useMemo(() => resolveDuty(now), [now.getMinutes(), now.getHours()]);
+  const start = dutyStartMin ?? duty.window?.startMin;
+  const end = dutyEndMin ?? duty.window?.endMin;
+  const [g0, g1] = dutyGradient(duty.phase);
+  const hasDuty = showDuty && start != null && end != null;
 
   const s = now.getSeconds();
   const m = now.getMinutes() + s / 60;
@@ -67,8 +75,8 @@ export function LiveClock({
     <svg width={size} height={size} viewBox="0 0 100 100" aria-hidden="true">
       <defs>
         <linearGradient id="lc-duty" x1="0%" y1="100%" x2="100%" y2="0%">
-          <stop offset="0%" stopColor="var(--color-primary)" />
-          <stop offset="100%" stopColor="var(--color-accent)" />
+          <stop offset="0%" stopColor={g0} />
+          <stop offset="100%" stopColor={g1} />
         </linearGradient>
       </defs>
 
@@ -84,10 +92,10 @@ export function LiveClock({
       />
 
       {/* Duty-hours arc */}
-      {showDuty && (
+      {hasDuty && (
         <>
           <path
-            d={arcPath(dutyStartMin, dutyEndMin, 42)}
+            d={arcPath(start!, end!, 42)}
             fill="none"
             stroke="url(#lc-duty)"
             strokeWidth="9"
@@ -95,9 +103,11 @@ export function LiveClock({
             opacity="0.16"
           />
           <path
-            d={arcPath(dutyStartMin, dutyEndMin, 42)}
+            d={arcPath(start!, end!, 42)}
             fill="none"
             stroke="url(#lc-duty)"
+            strokeDasharray={duty.phase === "tomorrow" ? "3 3" : undefined}
+            opacity={duty.phase === "tomorrow" ? 0.75 : 1}
             strokeWidth="4"
             strokeLinecap="round"
           />
