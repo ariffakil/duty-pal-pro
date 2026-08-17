@@ -11,7 +11,7 @@ import { ShiftDashboard } from "@/components/att/ShiftDashboard";
 import { DaySummary } from "@/components/att/DaySummary";
 
 import { AiBuddy, type BuddyMessage } from "@/components/att/AiBuddy";
-import { NovaAvatar } from "@/components/att/NovaAvatar";
+import { NovaPopup } from "@/components/att/NovaPopup";
 import { NovaChat } from "@/components/att/NovaChat";
 import { NovaRequestSheet, type RequestKind } from "@/components/att/NovaRequestSheet";
 import { submitStaffRequest } from "@/lib/requests.functions";
