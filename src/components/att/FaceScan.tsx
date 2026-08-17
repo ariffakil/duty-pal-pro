@@ -1,5 +1,6 @@
 import { MapPin, Loader2, Lock } from "lucide-react";
 import { FaceTouch } from "./FaceTouch";
+import { VerifyProgress } from "./VerifyProgress";
 
 type Props = {
   status: "idle" | "scanning" | "verified";
@@ -21,6 +22,8 @@ export function FaceScan({ status, progress, onScan }: Props) {
         action="Clock in"
         label="Tap the face to verify"
       />
+
+      {status === "scanning" && <VerifyProgress progress={progress} steps={steps} />}
 
       <div className="mt-4 flex items-center gap-2 rounded-xl border border-accent/15 bg-secondary/40 px-4 py-2">
         <span className="h-2 w-2 animate-pulse rounded-full bg-accent" />

@@ -105,9 +105,25 @@ export function FaceTouch({
           </span>
 
           {status === "scanning" && (
-            <span className="pointer-events-none absolute inset-6 overflow-hidden rounded-full">
-              <span className="absolute inset-x-0 h-16 bg-primary/25 blur-md animate-scanline" />
-            </span>
+            <>
+              <span className="pointer-events-none absolute inset-6 overflow-hidden rounded-full">
+                <span className="absolute inset-x-0 h-16 bg-primary/25 blur-md animate-scanline" />
+                <span
+                  className="absolute inset-0 animate-spin-fast"
+                  style={{
+                    background:
+                      "conic-gradient(from 0deg, transparent 0deg, transparent 280deg, color-mix(in oklch, var(--color-primary) 45%, transparent) 360deg)",
+                  }}
+                />
+              </span>
+              {[0, 0.5, 1].map((d) => (
+                <span
+                  key={d}
+                  className="pointer-events-none absolute rounded-full border border-primary/40 animate-pulse-ring"
+                  style={{ height: size, width: size, animationDelay: `${d}s` }}
+                />
+              ))}
+            </>
           )}
         </button>
       </div>
