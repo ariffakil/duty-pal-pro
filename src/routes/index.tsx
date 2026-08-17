@@ -91,6 +91,27 @@ function Index() {
   const msgId = useRef(2);
   const { speak, enabled: voiceOn, toggle: toggleVoice, speaking } = useNovaVoice();
 
+  // Nova only appears when she has something to say, then hides again.
+  const [novaOpen, setNovaOpen] = useState(false);
+  const novaSpokeRef = useRef(false);
+
+  useEffect(() => {
+    if (messages.length <= 2) return;
+    novaSpokeRef.current = false;
+    setNovaOpen(true);
+  }, [messages]);
+
+  useEffect(() => {
+    if (!novaOpen) return;
+    if (speaking) {
+      novaSpokeRef.current = true;
+      return;
+    }
+    const t = setTimeout(() => setNovaOpen(false), novaSpokeRef.current ? 1400 : 7000);
+    return () => clearTimeout(t);
+  }, [novaOpen, speaking, messages]);
+
+
   // Nova remembers each signed-in employee's language on this device.
   useEffect(() => {
     setNovaEmployee(EMPLOYEE.id);
