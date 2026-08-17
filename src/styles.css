@@ -243,6 +243,10 @@
   }
 }
 
+@utility animate-spin-fast {
+  animation: spin-slow 1.4s linear infinite;
+}
+
 @utility animate-spin-slow {
   animation: spin-slow 14s linear infinite;
 }
