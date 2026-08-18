@@ -49,7 +49,17 @@ export function LiveClock({ size = 92 }: Props) {
   };
 
   return (
-    <svg width={size} height={size} viewBox="0 0 100 100" aria-hidden="true">
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 100 100"
+      aria-hidden="true"
+      style={{
+        overflow: "visible",
+        filter:
+          "drop-shadow(0 18px 28px rgba(0,0,0,0.55)) drop-shadow(0 6px 10px rgba(0,0,0,0.4))",
+      }}
+    >
       <defs>
 
         <radialGradient id="lc-face" cx="35%" cy="26%" r="85%">
@@ -62,6 +72,11 @@ export function LiveClock({ size = 92 }: Props) {
           <stop offset="55%" stopColor="#f2f2f2" />
           <stop offset="100%" stopColor="#c9c9c9" />
         </radialGradient>
+        <linearGradient id="lc-rim" x1="20%" y1="0%" x2="80%" y2="100%">
+          <stop offset="0%" stopColor="#000000" stopOpacity="0.55" />
+          <stop offset="50%" stopColor="#000000" stopOpacity="0.08" />
+          <stop offset="100%" stopColor="#ffffff" stopOpacity="0.12" />
+        </linearGradient>
         <linearGradient id="lc-hand" x1="0%" y1="0%" x2="100%" y2="100%">
           <stop offset="0%" stopColor="#ffffff" />
           <stop offset="100%" stopColor="#e8e8e8" />
@@ -71,6 +86,8 @@ export function LiveClock({ size = 92 }: Props) {
       {/* Matte black dial */}
       <circle cx="50" cy="50" r="49" fill="url(#lc-face)" />
       <circle cx="50" cy="50" r="48.4" fill="none" stroke="#000" strokeOpacity="0.6" strokeWidth="1.2" />
+      {/* inner rim shading for depth */}
+      <circle cx="50" cy="50" r="46.5" fill="none" stroke="url(#lc-rim)" strokeWidth="3" />
 
 
 
