@@ -106,45 +106,8 @@ export function LiveClock({
       <circle cx="50" cy="50" r="49" fill="url(#lc-face)" />
       <circle cx="50" cy="50" r="48.4" fill="none" stroke="#000" strokeOpacity="0.6" strokeWidth="1.2" />
 
-      {/* Duty-hours arc */}
-      {hasDuty && (
-        <>
-          <path
-            d={arcPath(start!, end!, 44)}
-            fill="none"
-            stroke="url(#lc-duty)"
-            strokeWidth="5"
-            strokeLinecap="round"
-            opacity="0.12"
-          />
-          <path
-            d={arcPath(start!, end!, 44)}
-            fill="none"
-            stroke="url(#lc-duty)"
-            strokeDasharray={duty.phase === "tomorrow" ? "3 3" : undefined}
-            opacity={duty.phase === "tomorrow" ? 0.7 : 0.95}
-            strokeWidth="1.6"
-            strokeLinecap="round"
-          />
-          <path
-            d={arcPath(start!, end!, 26)}
-            fill="none"
-            stroke="var(--color-success)"
-            strokeWidth="1.4"
-            strokeLinecap="round"
-            opacity="0.22"
-          />
-          {elapsedEnd != null && elapsedEnd > start! && (
-            <path
-              d={arcPath(start!, elapsedEnd, 26)}
-              fill="none"
-              stroke="var(--color-success)"
-              strokeWidth="1.4"
-              strokeLinecap="round"
-            />
-          )}
-        </>
-      )}
+
+
 
       {/* Brass ball hour markers */}
       {Array.from({ length: 12 }).map((_, i) => {
