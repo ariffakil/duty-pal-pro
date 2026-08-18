@@ -234,12 +234,16 @@ export function LiveClock({
         </>
       )}
 
-      {/* Hands */}
-      {hand(h * 30, 21, 2, "var(--color-foreground)")}
-      {hand(m * 6, 30, 1.4, "var(--color-foreground)")}
-      {hand(s * 6, 34, 0.6, "var(--color-foreground)", 4)}
+      {/* Hands — brushed white hour/minute, accent sweep second */}
+      <g style={{ filter: "drop-shadow(0 1px 1.5px rgba(0,0,0,0.55))" }}>
+        {hand(h * 30, 21, 3.2, "var(--color-foreground)")}
+        {hand(m * 6, 30, 2.1, "var(--color-foreground)")}
+      </g>
+      {hand(s * 6, 34, 0.9, "var(--color-accent)", 8)}
 
-      <circle cx="50" cy="50" r="2.4" fill="var(--color-background)" stroke="var(--color-foreground)" strokeWidth="0.9" />
+      <circle cx="50" cy="50" r="3" fill="var(--color-accent)" />
+      <circle cx="50" cy="50" r="1.2" fill="var(--color-background)" />
+
     </svg>
   );
 }
