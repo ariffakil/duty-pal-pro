@@ -502,6 +502,7 @@ function Index() {
                     : "Clock in reminder in 10 minutes",
               }}
               onSpeak={speak}
+              speaking={speaking}
             />
           </div>
           <Link
