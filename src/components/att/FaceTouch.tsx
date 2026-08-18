@@ -38,37 +38,30 @@ export function FaceTouch({
           onClick={onTouch}
           disabled={status === "scanning" || status === "verified"}
           aria-label={label ?? "Touch face to verify"}
-          className="group relative flex items-center justify-center rounded-full border border-secondary/70 bg-background transition-transform active:scale-95 disabled:cursor-default"
-          style={{ height: size, width: size, boxShadow: "var(--shadow-glow)" }}
+          className="group relative flex items-center justify-center rounded-full bg-transparent transition-transform active:scale-95 disabled:cursor-default"
+          style={{ height: size, width: size }}
         >
-          <span
-            className={`absolute inset-2 rounded-full border ${
-              status === "verified"
-                ? "border-success/50"
-                : status === "failed"
-                  ? "border-destructive/60"
-                  : "border-primary/30"
-            }`}
-          />
+          {status !== "idle" && (
+            <svg
+              className="pointer-events-none absolute inset-0 -rotate-90"
+              viewBox={`0 0 ${size} ${size}`}
+            >
+              <circle
+                cx={size / 2}
+                cy={size / 2}
+                r={r}
+                fill="none"
+                stroke={stroke}
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeDasharray={circ}
+                strokeDashoffset={circ * (1 - pct)}
+                className="opacity-80"
+                style={{ transition: "stroke-dashoffset 0.35s linear" }}
+              />
+            </svg>
+          )}
 
-          <svg
-            className="pointer-events-none absolute inset-0 -rotate-90"
-            viewBox={`0 0 ${size} ${size}`}
-          >
-            <circle
-              cx={size / 2}
-              cy={size / 2}
-              r={r}
-              fill="none"
-              stroke={stroke}
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeDasharray={circ}
-              strokeDashoffset={circ * (1 - pct)}
-              className="opacity-80"
-              style={{ transition: "stroke-dashoffset 0.35s linear" }}
-            />
-          </svg>
 
           <span className="relative flex flex-col items-center justify-center">
             {status === "verified" ? (
