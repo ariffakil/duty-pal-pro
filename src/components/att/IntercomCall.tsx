@@ -201,6 +201,7 @@ export function IntercomCall({ open, onClose }: { open: boolean; onClose: () => 
                   </p>
                 </div>
 
+                <div className="sticky bottom-0 z-20 flex w-full flex-col items-center gap-4 bg-background/85 pb-2 pt-3 backdrop-blur-xl">
                 <div className="grid grid-cols-3 gap-x-6 gap-y-4">
                   {DIAL_KEYS.map(({ k, sub }) => (
                     <button
