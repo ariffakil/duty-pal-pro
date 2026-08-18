@@ -26,7 +26,7 @@ export function ShiftDashboard({
   const [intercomOpen, setIntercomOpen] = useState(false);
 
   return (
-    <div className="px-6 pb-6 pt-2">
+    <div className="px-6 pb-32 pt-2">
 
       <div className="flex items-center justify-between">
         <p className="text-[11px] uppercase tracking-[0.22em] text-muted-foreground">
@@ -79,7 +79,7 @@ export function ShiftDashboard({
         <MapPin className="h-3.5 w-3.5 text-primary" /> Karama, Dubai · Gate 2 reader
       </p>
 
-      <div className="sticky bottom-0 z-20 mt-12 grid grid-cols-4 gap-2.5 border-t border-border/40 bg-background/85 py-3 backdrop-blur-xl">
+      <div className="fixed inset-x-0 bottom-0 z-30 mx-auto grid w-full max-w-md grid-cols-4 gap-2.5 border-t border-border/40 bg-background/85 px-4 pb-[max(0.75rem,env(safe-area-inset-bottom))] pt-3 backdrop-blur-xl">
         {[
           { icon: Coffee, label: "Break", onClick: undefined },
           { icon: CalendarDays, label: "Leave", onClick: undefined },
