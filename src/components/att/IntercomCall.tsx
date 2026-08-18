@@ -38,6 +38,33 @@ export function IntercomCall({ open, onClose }: { open: boolean; onClose: () => 
   const [muted, setMuted] = useState(false);
   const [seconds, setSeconds] = useState(0);
   const [error, setError] = useState<string | null>(null);
+  const [tab, setTab] = useState<"directory" | "keypad">("directory");
+  const [digits, setDigits] = useState("");
+
+  /** Append a key press with a soft DTMF-style tone. */
+  const press = (k: string) => {
+    setDigits((d) => (d.length >= 12 ? d : d + k));
+    try {
+      const Ctx =
+        window.AudioContext ??
+        (window as unknown as { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
+      if (!Ctx) return;
+      const ctx = new Ctx();
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = "sine";
+      osc.frequency.value = 620 + (DIAL_KEYS.findIndex((x) => x.k === k) % 6) * 55;
+      gain.gain.setValueAtTime(0.06, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.16);
+      osc.connect(gain).connect(ctx.destination);
+      osc.start();
+      osc.stop(ctx.currentTime + 0.17);
+      osc.onended = () => void ctx.close();
+    } catch {
+      /* audio is best-effort */
+    }
+  };
+
 
   const pcRef = useRef<RTCPeerConnection | null>(null);
   const streamRef = useRef<MediaStream | null>(null);
