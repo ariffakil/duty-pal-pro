@@ -170,20 +170,13 @@ export function NovaChat({
             className="relative flex h-20 w-20 items-center justify-center"
           >
             {(voice.listening || speaking) && (
-              <>
-                <span
-                  className={`absolute inset-1 rounded-full blur-xl ${
-                    voice.listening ? "bg-accent/45" : "bg-primary/45"
-                  }`}
-                  style={{ animation: "pulse 1.6s ease-in-out infinite" }}
-                />
-                <span
-                  className={`absolute inset-0 rounded-full border animate-pulse-ring ${
-                    voice.listening ? "border-accent/60" : "border-primary/60"
-                  }`}
-                />
-              </>
+              <span
+                className={`absolute inset-0 rounded-full border animate-pulse-ring ${
+                  voice.listening ? "border-accent/60" : "border-primary/60"
+                }`}
+              />
             )}
+
             <img
               src={novaAvatar.url}
               alt="Nova AI assistant"
@@ -192,11 +185,8 @@ export function NovaChat({
             />
             {voice.listening || speaking ? (
               <span
-                className={`absolute -bottom-1 left-1/2 flex -translate-x-1/2 items-end gap-[3px] rounded-full border px-2 py-1 backdrop-blur ${
-                  voice.listening
-                    ? "border-accent/40 bg-background/80"
-                    : "border-primary/40 bg-background/80"
-                }`}
+                className={`absolute -bottom-1 left-1/2 flex -translate-x-1/2 items-end gap-[3px] rounded-full px-2 py-1`}
+
               >
                 {[0, 1, 2, 3].map((i) => (
                   <span
