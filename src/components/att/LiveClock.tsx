@@ -63,8 +63,8 @@ export function LiveClock({ size = 92 }: Props) {
           <stop offset="100%" stopColor="#c9c9c9" />
         </radialGradient>
         <linearGradient id="lc-hand" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stopColor="#f4e6bd" />
-          <stop offset="100%" stopColor="#bda56b" />
+          <stop offset="0%" stopColor="#6ff2b0" />
+          <stop offset="100%" stopColor="#12a862" />
         </linearGradient>
       </defs>
 
