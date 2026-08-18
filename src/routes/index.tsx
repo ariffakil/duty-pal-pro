@@ -352,7 +352,7 @@ function Index() {
     endMin: SHIFT_END_MIN,
     clockInAt,
     clockedOut,
-    onRemind: push,
+    onRemind: queueReminder,
   });
 
   return (
