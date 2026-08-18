@@ -79,21 +79,27 @@ export function ShiftDashboard({
         <MapPin className="h-3.5 w-3.5 text-primary" /> Karama, Dubai · Gate 2 reader
       </p>
 
-      <div className="mt-5 grid grid-cols-3 gap-3">
+      <div className="mt-5 grid grid-cols-4 gap-2.5">
         {[
-          { icon: Coffee, label: "Break" },
-          { icon: CalendarDays, label: "Leave" },
-          { icon: Fingerprint, label: "Access" },
-        ].map(({ icon: Icon, label }) => (
+          { icon: Coffee, label: "Break", onClick: undefined },
+          { icon: CalendarDays, label: "Leave", onClick: undefined },
+          { icon: Fingerprint, label: "Access", onClick: undefined },
+          { icon: Phone, label: "Intercom", onClick: () => setIntercomOpen(true) },
+        ].map(({ icon: Icon, label, onClick }) => (
           <button
             key={label}
-            className="surface-card flex flex-col items-center gap-2 px-2 py-4 text-xs font-medium text-muted-foreground transition-colors hover:text-foreground"
+            onClick={onClick}
+            aria-label={label === "Intercom" ? "Open intercom call" : label}
+            className="surface-card flex flex-col items-center gap-2 px-1.5 py-4 text-[11px] font-medium text-muted-foreground transition-colors hover:text-foreground"
           >
             <Icon className="h-5 w-5 text-primary" />
             {label}
           </button>
         ))}
       </div>
+
+      <IntercomCall open={intercomOpen} onClose={() => setIntercomOpen(false)} />
     </div>
+
   );
 }
