@@ -1,6 +1,6 @@
 import { createServerFn } from "@tanstack/react-start";
 
-export type StaffRequestKind = "late" | "leave";
+export type StaffRequestKind = "late" | "leave" | "early";
 
 export const submitStaffRequest = createServerFn({ method: "POST" })
   .inputValidator((input: {
@@ -9,6 +9,7 @@ export const submitStaffRequest = createServerFn({ method: "POST" })
     employeeName: string;
     reason: string;
     lateMinutes?: number;
+    earlyMinutes?: number;
     at: string;
   }) => input)
   .handler(async ({ data }) => {
