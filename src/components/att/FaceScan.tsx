@@ -1,6 +1,7 @@
 import { MapPin, Loader2 } from "lucide-react";
 import { FaceTouch } from "./FaceTouch";
 import { VerifyProgress } from "./VerifyProgress";
+import { fmtMin, resolveDuty } from "@/lib/dutyRoster";
 
 type Props = {
   status: "idle" | "scanning" | "verified" | "failed";
@@ -13,17 +14,17 @@ const steps = ["Looking for face", "Liveness check", "Matching template", "Serve
 export function FaceScan({ status, progress, onScan }: Props) {
   const activeStep = Math.min(steps.length - 1, Math.floor((progress / 100) * steps.length));
 
-  const today = new Date();
+  const duty = resolveDuty(new Date());
 
   return (
     <div className="flex flex-1 flex-col items-center justify-center px-6 pb-6 pt-2 text-center">
       <div className="mb-5 flex items-center gap-3 rounded-full border border-border/60 bg-secondary/25 px-4 py-1.5 backdrop-blur-md">
-        <p className="font-display text-[13px] font-bold uppercase tracking-[0.18em] text-foreground">
-          {today.toLocaleDateString("en-GB", { weekday: "long" })}
+        <p className="font-display text-[12px] font-bold uppercase tracking-[0.18em] text-foreground">
+          Today Duty Hours
         </p>
         <span className="h-3.5 w-px bg-border" />
-        <p className="text-[11px] font-medium tabular-nums tracking-wide text-muted-foreground">
-          {today.toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" })}
+        <p className="text-[12px] font-semibold tabular-nums tracking-wide text-success">
+          {duty.window ? `${fmtMin(duty.window.startMin)} – ${fmtMin(duty.window.endMin)}` : "Day off"}
         </p>
       </div>
 
