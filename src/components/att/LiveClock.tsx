@@ -143,7 +143,7 @@ export function LiveClock({
             y1={p0.y}
             x2={p1.x}
             y2={p1.y}
-            stroke="var(--clock-tick)"
+            stroke="var(--color-foreground)"
             strokeWidth="0.5"
             strokeLinecap="round"
             opacity="0.3"
@@ -164,7 +164,7 @@ export function LiveClock({
             y1={p0.y}
             x2={p1.x}
             y2={p1.y}
-            stroke="var(--clock-tick)"
+            stroke="var(--color-foreground)"
             strokeWidth="1.4"
             strokeLinecap="round"
             opacity="0.85"
@@ -191,7 +191,7 @@ export function LiveClock({
             fontSize="11"
             fontWeight="700"
             letterSpacing="-0.2"
-            fill="var(--clock-hand)"
+            fill="var(--color-foreground)"
           >
             {n}
           </text>
@@ -236,12 +236,12 @@ export function LiveClock({
 
       {/* Hands — brushed white hour/minute, accent sweep second */}
       <g style={{ filter: "drop-shadow(0 1px 1.5px rgba(0,0,0,0.55))" }}>
-        {hand(h * 30, 21, 3.2, "var(--clock-hand)")}
-        {hand(m * 6, 30, 2.1, "var(--clock-hand)")}
+        {hand(h * 30, 21, 3.2, "var(--color-foreground)")}
+        {hand(m * 6, 30, 2.1, "var(--color-foreground)")}
       </g>
-      {hand(s * 6, 34, 0.9, "var(--clock-second)", 8)}
+      {hand(s * 6, 34, 0.9, "var(--color-accent)", 8)}
 
-      <circle cx="50" cy="50" r="3" fill="var(--clock-second)" />
+      <circle cx="50" cy="50" r="3" fill="var(--color-accent)" />
       <circle cx="50" cy="50" r="1.2" fill="var(--color-background)" />
 
     </svg>

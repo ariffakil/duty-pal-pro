@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useSmartReminders } from "@/hooks/useSmartReminders";
-import { Bell, ChevronLeft, Palette, ShieldCheck, Wifi } from "lucide-react";
+import { Bell, ChevronLeft, ShieldCheck, Wifi } from "lucide-react";
 import mytimeLogo from "@/assets/mytime-logo.png.asset.json";
 
 
@@ -12,8 +12,6 @@ import { DaySummary } from "@/components/att/DaySummary";
 
 import type { BuddyMessage } from "@/components/att/AiBuddy";
 import { NovaPopup } from "@/components/att/NovaPopup";
-import { ThemeSheet } from "@/components/att/ThemeSheet";
-import { applyTheme, loadTheme } from "@/lib/theme";
 import { NovaChat } from "@/components/att/NovaChat";
 import { NovaRequestSheet, type RequestKind } from "@/components/att/NovaRequestSheet";
 import { submitStaffRequest } from "@/lib/requests.functions";
@@ -345,13 +343,6 @@ function Index() {
 
 
 
-  const [themeOpen, setThemeOpen] = useState(false);
-
-  // Restore this employee's saved appearance on load.
-  useEffect(() => {
-    applyTheme(loadTheme(EMPLOYEE.id));
-  }, []);
-
   // Smart-watch style reminders driven by the employee's schedule.
   useSmartReminders({
     employeeId: EMPLOYEE.id,
@@ -441,21 +432,8 @@ function Index() {
                   <Bell className="h-4 w-4" />
                   <span className="absolute right-2 top-2 h-1.5 w-1.5 rounded-full bg-accent" />
                 </button>
-                <button
-                  onClick={() => setThemeOpen(true)}
-                  className="flex h-9 w-9 items-center justify-center rounded-xl border border-primary/20 bg-secondary/40"
-                  aria-label="Appearance settings"
-                >
-                  <Palette className="h-4 w-4" />
-                </button>
               </header>
 
-
-              <ThemeSheet
-                open={themeOpen}
-                employeeId={EMPLOYEE.id}
-                onClose={() => setThemeOpen(false)}
-              />
 
               <NovaPopup
                 open={novaOpen}
