@@ -185,11 +185,8 @@ export function NovaChat({
             />
             {voice.listening || speaking ? (
               <span
-                className={`absolute -bottom-1 left-1/2 flex -translate-x-1/2 items-end gap-[3px] rounded-full border px-2 py-1 backdrop-blur ${
-                  voice.listening
-                    ? "border-accent/40 bg-background/80"
-                    : "border-primary/40 bg-background/80"
-                }`}
+                className={`absolute -bottom-1 left-1/2 flex -translate-x-1/2 items-end gap-[3px] rounded-full px-2 py-1`}
+
               >
                 {[0, 1, 2, 3].map((i) => (
                   <span
