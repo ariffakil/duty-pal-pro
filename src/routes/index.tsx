@@ -377,7 +377,7 @@ function Index() {
                 <img
                   src={mytimeLogo.url}
                   alt="MyTime Cloud logo"
-                  className="h-9 w-auto max-w-[190px] object-contain drop-shadow-[0_0_10px_rgba(255,255,255,0.35)]"
+                  className="h-9 w-auto max-w-[190px] object-contain brightness-0 invert drop-shadow-[0_0_12px_rgba(255,255,255,0.45)]"
                 />
                 <div className="text-right leading-tight">
                   <p className="font-display text-sm font-bold text-accent">
