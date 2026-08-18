@@ -136,6 +136,29 @@ function Index() {
 
   const attemptRef = useRef(0);
 
+  // A follow-up prompt (late reason, leave request) that must wait for Nova to
+  // finish her current line before it speaks.
+  const [pendingPrompt, setPendingPrompt] = useState<(() => void) | null>(null);
+  const promptSpokeRef = useRef(false);
+
+  useEffect(() => {
+    if (!pendingPrompt) return;
+    if (speaking) {
+      promptSpokeRef.current = true;
+      return;
+    }
+    // If voice is off, Nova never enters the speaking state — give the user
+    // time to read the first message instead.
+    const delay = promptSpokeRef.current ? 900 : 4500;
+    const t = setTimeout(() => {
+      promptSpokeRef.current = false;
+      setPendingPrompt(null);
+      pendingPrompt();
+    }, delay);
+    return () => clearTimeout(t);
+  }, [pendingPrompt, speaking]);
+
+
   const startScan = () => {
     attemptRef.current += 1;
     setStage("scanning");
@@ -171,13 +194,15 @@ function Index() {
       );
       if (late > 30 && !askedRef.current.late) {
         askedRef.current.late = true;
-        setTimeout(() => {
+        // Queued — it only runs once the clock-in announcement has finished
+        // speaking, so the two voice lines never overlap.
+        setPendingPrompt(() => () => {
           push(
             `You are late by ${late} minutes. Would you like to send a reason for the delay to your Manager?`,
             "nudge",
           );
           setRequestKind("late");
-        }, 5000);
+        });
       }
     }, 2000);
   };
