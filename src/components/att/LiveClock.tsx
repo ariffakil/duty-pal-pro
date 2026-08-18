@@ -89,18 +89,23 @@ export function LiveClock({
           <stop offset="0%" stopColor={g0} />
           <stop offset="100%" stopColor={g1} />
         </linearGradient>
+        <radialGradient id="lc-face" cx="38%" cy="30%" r="78%">
+          <stop offset="0%" stopColor="var(--color-secondary)" stopOpacity="0.85" />
+          <stop offset="70%" stopColor="var(--color-background)" stopOpacity="0.9" />
+          <stop offset="100%" stopColor="var(--color-background)" stopOpacity="1" />
+        </radialGradient>
+        <linearGradient id="lc-rim" x1="10%" y1="0%" x2="90%" y2="100%">
+          <stop offset="0%" stopColor="var(--color-foreground)" stopOpacity="0.75" />
+          <stop offset="55%" stopColor="var(--color-foreground)" stopOpacity="0.18" />
+          <stop offset="100%" stopColor="var(--color-foreground)" stopOpacity="0.6" />
+        </linearGradient>
       </defs>
 
+      {/* Brushed dial face */}
+      <circle cx="50" cy="50" r="45" fill="url(#lc-face)" />
+
       {/* Base dial ring */}
-      <circle
-        cx="50"
-        cy="50"
-        r="42"
-        fill="none"
-        stroke="var(--color-foreground)"
-        strokeWidth="1.4"
-        opacity="0.35"
-      />
+      <circle cx="50" cy="50" r="42" fill="none" stroke="url(#lc-rim)" strokeWidth="1.6" />
 
       {/* Duty-hours arc */}
       {hasDuty && (
@@ -125,12 +130,33 @@ export function LiveClock({
         </>
       )}
 
+      {/* Minute ticks */}
+      {Array.from({ length: 60 }).map((_, i) => {
+        if (i % 5 === 0) return null;
+        const a = i * 6;
+        const p0 = polar(a, 38.5);
+        const p1 = polar(a, 36.5);
+        return (
+          <line
+            key={`m${i}`}
+            x1={p0.x}
+            y1={p0.y}
+            x2={p1.x}
+            y2={p1.y}
+            stroke="var(--color-foreground)"
+            strokeWidth="0.5"
+            strokeLinecap="round"
+            opacity="0.3"
+          />
+        );
+      })}
+
       {/* Hour tick marks — evenly spaced, clear of the numerals */}
       {Array.from({ length: 12 }).map((_, i) => {
         if (i % 3 === 0) return null;
         const a = i * 30;
-        const p0 = polar(a, 37);
-        const p1 = polar(a, 31.5);
+        const p0 = polar(a, 38);
+        const p1 = polar(a, 32.5);
         return (
           <line
             key={i}
@@ -139,12 +165,13 @@ export function LiveClock({
             x2={p1.x}
             y2={p1.y}
             stroke="var(--color-foreground)"
-            strokeWidth="1.3"
+            strokeWidth="1.4"
             strokeLinecap="round"
-            opacity="0.7"
+            opacity="0.85"
           />
         );
       })}
+
 
       {/* Numerals */}
       {[
