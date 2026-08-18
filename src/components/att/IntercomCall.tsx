@@ -243,9 +243,6 @@ export function IntercomCall({ open, onClose }: { open: boolean; onClose: () => 
               </div>
             )}
             {error && <p className="mt-3 shrink-0 text-xs text-destructive">{error}</p>}
-            <p className="mt-3 shrink-0 text-center text-[11px] text-muted-foreground">
-              Calls are peer-to-peer over WebRTC with encrypted audio.
-            </p>
           </div>
         ) : (
           <div className="flex min-h-0 flex-1 flex-col items-center justify-center">
