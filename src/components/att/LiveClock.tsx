@@ -125,12 +125,12 @@ export function LiveClock({
         </>
       )}
 
-      {/* Minor tick marks */}
+      {/* Hour tick marks — evenly spaced, clear of the numerals */}
       {Array.from({ length: 12 }).map((_, i) => {
         if (i % 3 === 0) return null;
         const a = i * 30;
-        const p0 = polar(a, 34);
-        const p1 = polar(a, 29);
+        const p0 = polar(a, 37);
+        const p1 = polar(a, 31.5);
         return (
           <line
             key={i}
@@ -139,9 +139,9 @@ export function LiveClock({
             x2={p1.x}
             y2={p1.y}
             stroke="var(--color-foreground)"
-            strokeWidth="0.8"
+            strokeWidth="1.3"
             strokeLinecap="round"
-            opacity="0.55"
+            opacity="0.7"
           />
         );
       })}
@@ -153,7 +153,7 @@ export function LiveClock({
         { n: 6, a: 180 },
         { n: 9, a: 270 },
       ].map(({ n, a }) => {
-        const p = polar(a, 31);
+        const p = polar(a, 33);
         return (
           <text
             key={n}
@@ -161,8 +161,9 @@ export function LiveClock({
             y={p.y}
             textAnchor="middle"
             dominantBaseline="central"
-            fontSize="9"
-            fontWeight="500"
+            fontSize="11"
+            fontWeight="700"
+            letterSpacing="-0.2"
             fill="var(--color-foreground)"
           >
             {n}
