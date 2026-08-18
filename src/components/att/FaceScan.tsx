@@ -29,11 +29,8 @@ export function FaceScan({ status, progress, onScan }: Props) {
       </div>
 
       <div className="relative">
-        <span
-          className="pointer-events-none absolute -inset-6 rounded-full opacity-60 blur-2xl"
-          style={{ background: "var(--gradient-aurora)", opacity: 0.14 }}
-        />
         <FaceTouch
+
           status={status}
           onTouch={onScan}
           progress={progress}
