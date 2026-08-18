@@ -80,8 +80,8 @@ export function LiveClock({ size = 92 }: Props) {
         const p = polar(i * 30, 39.5);
         return (
           <g key={i}>
-            <circle cx={p.x} cy={p.y + 0.5} r={1.9} fill="#000" opacity="0.5" />
-            <circle cx={p.x} cy={p.y} r={1.9} fill="url(#lc-ball)" />
+            <circle cx={p.x} cy={p.y + 0.4} r={1.1} fill="#000" opacity="0.5" />
+            <circle cx={p.x} cy={p.y} r={1.1} fill="url(#lc-ball)" />
           </g>
         );
       })}
