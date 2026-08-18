@@ -15,6 +15,8 @@ import {
   XCircle,
 } from "lucide-react";
 
+import { NovaFloating } from "@/components/att/NovaFloating";
+
 export const Route = createFileRoute("/admin")({
   head: () => ({
     meta: [
@@ -314,6 +316,7 @@ function AdminPage() {
 
         <div className="mt-4 pb-12">{content}</div>
       </div>
+      <NovaFloating />
     </main>
   );
 }
