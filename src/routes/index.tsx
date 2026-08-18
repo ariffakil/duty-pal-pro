@@ -69,8 +69,13 @@ function Index() {
   const [actualOutAt, setActualOutAt] = useState<Date | null>(null);
   const [now, setNow] = useState<Date | null>(null);
   const [requestKind, setRequestKind] = useState<RequestKind | null>(null);
-  const askedRef = useRef<{ late: boolean; leave: boolean }>({ late: false, leave: false });
+  const askedRef = useRef<{ late: boolean; leave: boolean; early: boolean }>({
+    late: false,
+    leave: false,
+    early: false,
+  });
   const lateMinutesRef = useRef(0);
+  const [earlyMinutes, setEarlyMinutes] = useState(0);
   const [period, setPeriod] = useState<{
     scope: "week" | "month";
     title: string;
@@ -216,18 +221,21 @@ function Index() {
           employeeName: EMPLOYEE.name,
           reason,
           lateMinutes: kind === "late" ? lateMinutesRef.current : 0,
+          earlyMinutes: kind === "early" ? earlyMinutes : 0,
           at: new Date().toISOString(),
         },
       });
       push(
         kind === "late"
           ? `Your late reason has been sent to your Manager and HR. Reference ${res.reference}.`
-          : `Your leave request has been sent to your Manager and HR. Reference ${res.reference}.`,
+          : kind === "early"
+            ? `Your early clock out reason has been sent to your Manager and HR. Reference ${res.reference}.`
+            : `Your leave request has been sent to your Manager and HR. Reference ${res.reference}.`,
         "info",
       );
       return { reference: res.reference, notified: res.notified };
     },
-    [push],
+    [push, earlyMinutes],
   );
 
 
@@ -471,6 +479,20 @@ function Index() {
                       hours: Math.round((ms / 3600_000) * 10) / 10,
                       late: lateMinutes,
                     };
+                    // Early clock out (30+ minutes before duty end) → ask for a reason.
+                    const early = SHIFT_END_MIN - (out.getHours() * 60 + out.getMinutes());
+                    if (early >= 30 && !askedRef.current.early) {
+                      askedRef.current.early = true;
+                      setEarlyMinutes(early);
+                      setPendingPrompt(() => () => {
+                        push(
+                          `You clocked out early by ${early} minutes. Would you like to write a reason to your Manager?`,
+                          "nudge",
+                        );
+                        setRequestKind("early");
+                      });
+                    }
+
                     const monthEnd = isLastPunchOfMonth(out);
                     const weekEnd = isLastPunchOfWeek(out);
                     if (monthEnd || weekEnd) {
@@ -503,6 +525,7 @@ function Index() {
                 <NovaRequestSheet
                   kind={requestKind}
                   lateMinutes={lateMinutes}
+                  earlyMinutes={earlyMinutes}
                   onClose={() => setRequestKind(null)}
                   onSubmit={(reason) => sendRequest(requestKind, reason)}
                 />

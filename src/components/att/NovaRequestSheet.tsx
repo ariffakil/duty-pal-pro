@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Send, X, Loader2, CheckCircle2 } from "lucide-react";
 
-export type RequestKind = "late" | "leave";
+export type RequestKind = "late" | "leave" | "early";
 
 const PRESETS: Record<RequestKind, string[]> = {
   late: [
@@ -20,23 +20,43 @@ const PRESETS: Record<RequestKind, string[]> = {
     "Travel / flight delay",
     "Half day leave",
   ],
+  early: [
+    "Approved by supervisor",
+    "Medical appointment",
+    "Family emergency",
+    "Feeling unwell",
+    "Duty completed early",
+    "Personal urgent work",
+  ],
 };
 
 type Props = {
   kind: RequestKind;
   lateMinutes?: number;
+  earlyMinutes?: number;
   onClose: () => void;
   onSubmit: (reason: string) => Promise<{ reference: string; notified: string }>;
 };
 
-export function NovaRequestSheet({ kind, lateMinutes = 0, onClose, onSubmit }: Props) {
+export function NovaRequestSheet({
+  kind,
+  lateMinutes = 0,
+  earlyMinutes = 0,
+  onClose,
+  onSubmit,
+}: Props) {
   const [selected, setSelected] = useState<string | null>(null);
   const [custom, setCustom] = useState("");
   const [state, setState] = useState<"idle" | "sending" | "sent">("idle");
   const [result, setResult] = useState<{ reference: string; notified: string } | null>(null);
 
   const reason = selected === "__custom" ? custom.trim() : (selected ?? "");
-  const title = kind === "late" ? "Late arrival reason" : "Leave request";
+  const title =
+    kind === "late"
+      ? "Late arrival reason"
+      : kind === "early"
+        ? "Early clock out reason"
+        : "Leave request";
 
   const send = async () => {
     if (!reason) return;
@@ -76,7 +96,9 @@ export function NovaRequestSheet({ kind, lateMinutes = 0, onClose, onSubmit }: P
                 <p className="mt-0.5 text-xs text-muted-foreground">
                   {kind === "late"
                     ? `You are late by ${lateMinutes} minutes. Pick a reason for your Manager.`
-                    : "You have not clocked in. Send a leave request to your Manager."}
+                    : kind === "early"
+                      ? `You clocked out ${earlyMinutes} minutes early. Pick a reason for your Manager.`
+                      : "You have not clocked in. Send a leave request to your Manager."}
                 </p>
               </div>
               <button onClick={onClose} aria-label="Close" className="rounded-xl p-1.5 text-muted-foreground">
