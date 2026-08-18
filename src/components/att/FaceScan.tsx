@@ -14,7 +14,7 @@ const steps = ["Looking for face", "Liveness check", "Matching template", "Serve
 export function FaceScan({ status, progress, onScan }: Props) {
   const activeStep = Math.min(steps.length - 1, Math.floor((progress / 100) * steps.length));
 
-  const today = new Date();
+  const duty = resolveDuty(new Date());
 
   return (
     <div className="flex flex-1 flex-col items-center justify-center px-6 pb-6 pt-2 text-center">
