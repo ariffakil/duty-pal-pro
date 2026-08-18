@@ -171,13 +171,15 @@ function Index() {
       );
       if (late > 30 && !askedRef.current.late) {
         askedRef.current.late = true;
-        setTimeout(() => {
+        // Queued — it only runs once the clock-in announcement has finished
+        // speaking, so the two voice lines never overlap.
+        setPendingPrompt(() => () => {
           push(
             `You are late by ${late} minutes. Would you like to send a reason for the delay to your Manager?`,
             "nudge",
           );
           setRequestKind("late");
-        }, 5000);
+        });
       }
     }, 2000);
   };
