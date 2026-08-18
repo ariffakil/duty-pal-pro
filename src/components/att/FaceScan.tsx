@@ -1,6 +1,7 @@
 import { MapPin, Loader2 } from "lucide-react";
 import { FaceTouch } from "./FaceTouch";
 import { VerifyProgress } from "./VerifyProgress";
+import { fmtMin, resolveDuty } from "@/lib/dutyRoster";
 
 type Props = {
   status: "idle" | "scanning" | "verified" | "failed";
