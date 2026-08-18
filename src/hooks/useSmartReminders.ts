@@ -19,10 +19,10 @@ export function useSmartReminders({ employeeId, onRemind, ...ctx }: Args) {
   useEffect(() => {
     const check = () => {
       const list = dueReminders(employeeId, { ...ctxRef.current, now: new Date() });
-      list.forEach((r, i) => setTimeout(() => remindRef.current(r.text, r.tone), i * 4000));
+      list.forEach((r) => remindRef.current(r.text, r.tone));
     };
     check();
-    const t = setInterval(check, 60_000);
+    const t = setInterval(check, 20_000);
     return () => clearInterval(t);
   }, [employeeId]);
 }
