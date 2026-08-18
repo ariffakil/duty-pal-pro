@@ -27,6 +27,8 @@ const PRESETS: Record<RequestKind, string[]> = {
     "Feeling unwell",
     "Duty completed early",
     "Personal urgent work",
+    "Sick leave",
+    "Travel / flight timing",
   ],
 };
 
