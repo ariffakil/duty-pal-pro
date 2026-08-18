@@ -1,6 +1,9 @@
-import { MapPin, Coffee, CalendarDays, Fingerprint } from "lucide-react";
+import { useState } from "react";
+import { MapPin, Coffee, CalendarDays, Fingerprint, Phone } from "lucide-react";
 import { FaceTouch } from "./FaceTouch";
 import { AnalogClock } from "./AnalogClock";
+import { IntercomCall } from "./IntercomCall";
+
 
 
 type Props = {
