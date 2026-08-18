@@ -1,5 +1,20 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { Mic, MicOff, PhoneOff, PhoneCall, X, Volume2 } from "lucide-react";
+import { Mic, MicOff, PhoneOff, PhoneCall, Phone, Delete, X, Volume2 } from "lucide-react";
+
+const DIAL_KEYS: { k: string; sub?: string }[] = [
+  { k: "1" },
+  { k: "2", sub: "ABC" },
+  { k: "3", sub: "DEF" },
+  { k: "4", sub: "GHI" },
+  { k: "5", sub: "JKL" },
+  { k: "6", sub: "MNO" },
+  { k: "7", sub: "PQRS" },
+  { k: "8", sub: "TUV" },
+  { k: "9", sub: "WXYZ" },
+  { k: "*" },
+  { k: "0", sub: "+" },
+  { k: "#" },
+];
 
 export type IntercomTarget = { id: string; name: string; role: string };
 
@@ -117,18 +132,84 @@ export function IntercomCall({ open, onClose }: { open: boolean; onClose: () => 
 
         {state === "idle" || state === "error" ? (
           <>
-            <div className="mt-4 grid grid-cols-2 gap-3">
-              {INTERCOM_DIRECTORY.map((t) => (
+            <div className="mt-4 grid grid-cols-2 gap-1 rounded-full border border-border bg-secondary/30 p-1">
+              {(["directory", "keypad"] as const).map((t) => (
                 <button
-                  key={t.id}
-                  onClick={() => void dial(t)}
-                  className="surface-card flex flex-col items-start gap-1 px-4 py-3 text-left transition-colors hover:border-primary/40"
+                  key={t}
+                  onClick={() => setTab(t)}
+                  className={`rounded-full py-1.5 text-xs font-semibold capitalize transition-colors ${
+                    tab === t
+                      ? "bg-primary text-primary-foreground"
+                      : "text-muted-foreground hover:text-foreground"
+                  }`}
                 >
-                  <span className="text-sm font-semibold text-foreground">{t.name}</span>
-                  <span className="text-[11px] text-muted-foreground">{t.role}</span>
+                  {t}
                 </button>
               ))}
             </div>
+
+            {tab === "directory" ? (
+              <div className="mt-4 grid grid-cols-2 gap-3">
+                {INTERCOM_DIRECTORY.map((t) => (
+                  <button
+                    key={t.id}
+                    onClick={() => void dial(t)}
+                    className="surface-card flex flex-col items-start gap-1 px-4 py-3 text-left transition-colors hover:border-primary/40"
+                  >
+                    <span className="text-sm font-semibold text-foreground">{t.name}</span>
+                    <span className="text-[11px] text-muted-foreground">{t.role}</span>
+                  </button>
+                ))}
+              </div>
+            ) : (
+              <div className="mt-4 flex flex-col items-center">
+                <div className="flex h-10 w-full items-center justify-center">
+                  <p className="font-display text-2xl font-semibold tracking-[0.12em] text-foreground">
+                    {digits || <span className="text-muted-foreground/50">Enter extension</span>}
+                  </p>
+                </div>
+
+                <div className="mt-3 grid grid-cols-3 gap-3">
+                  {DIAL_KEYS.map(({ k, sub }) => (
+                    <button
+                      key={k}
+                      onClick={() => press(k)}
+                      className="flex h-14 w-14 flex-col items-center justify-center rounded-full border border-border bg-secondary/40 transition-colors hover:border-primary/50 hover:bg-secondary/70 active:scale-95"
+                    >
+                      <span className="font-display text-lg font-semibold leading-none text-foreground">
+                        {k}
+                      </span>
+                      {sub && (
+                        <span className="mt-0.5 text-[8px] font-medium tracking-[0.18em] text-muted-foreground">
+                          {sub}
+                        </span>
+                      )}
+                    </button>
+                  ))}
+                </div>
+
+                <div className="mt-5 flex w-full items-center justify-center gap-6">
+                  <span className="h-11 w-11" aria-hidden />
+                  <button
+                    onClick={() => digits && void dial({ id: digits, name: digits, role: "Extension" })}
+                    disabled={!digits}
+                    aria-label="Call extension"
+                    className="flex h-16 w-16 items-center justify-center rounded-full text-success-foreground shadow-lg transition-transform hover:scale-105 disabled:opacity-40"
+                    style={{ backgroundColor: "var(--color-success)" }}
+                  >
+                    <Phone className="h-7 w-7" />
+                  </button>
+                  <button
+                    onClick={() => setDigits((d) => d.slice(0, -1))}
+                    disabled={!digits}
+                    aria-label="Delete last digit"
+                    className="flex h-11 w-11 items-center justify-center rounded-full text-muted-foreground transition-colors hover:text-foreground disabled:opacity-30"
+                  >
+                    <Delete className="h-5 w-5" />
+                  </button>
+                </div>
+              </div>
+            )}
             {error && <p className="mt-3 text-xs text-destructive">{error}</p>}
             <p className="mt-3 text-[11px] text-muted-foreground">
               Calls are peer-to-peer over WebRTC with encrypted audio.
