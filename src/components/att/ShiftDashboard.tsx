@@ -14,6 +14,7 @@ type Props = {
   lateMinutes: number;
   onClockOut: () => void;
   clockedOut: boolean;
+  tomorrow?: { day: string; date: string; start: string; end: string; location: string };
 };
 
 export function ShiftDashboard({
@@ -22,6 +23,7 @@ export function ShiftDashboard({
   lateMinutes,
   onClockOut,
   clockedOut,
+  tomorrow,
 }: Props) {
   const [intercomOpen, setIntercomOpen] = useState(false);
 
@@ -43,9 +45,24 @@ export function ShiftDashboard({
 
       <div className="mt-5 flex flex-col items-center">
         {clockedOut ? (
-          <p className="rounded-2xl bg-success/15 px-6 py-4 text-sm font-semibold text-success">
-            Shift completed · Thank you
-          </p>
+          <div className="w-full space-y-3">
+            <p className="rounded-2xl bg-success/15 px-6 py-4 text-center text-sm font-semibold text-success">
+              Shift completed · Thank you
+            </p>
+            {tomorrow && (
+              <div className="rounded-2xl border border-primary/30 bg-primary/5 p-4">
+                <p className="flex items-center gap-1.5 text-[11px] uppercase tracking-[0.18em] text-primary">
+                  <CalendarDays className="h-3.5 w-3.5" /> Tomorrow&apos;s duty
+                </p>
+                <p className="mt-1 font-display text-2xl font-semibold tabular-nums text-foreground">
+                  {tomorrow.start} — {tomorrow.end}
+                </p>
+                <p className="mt-1 text-xs text-muted-foreground">
+                  {tomorrow.day}, {tomorrow.date} · {tomorrow.location}
+                </p>
+              </div>
+            )}
+          </div>
         ) : (
           <FaceTouch
             status="idle"
