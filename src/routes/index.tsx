@@ -54,6 +54,10 @@ const EMPLOYEE = { id: "EMP-1042", name: "Ariff" };
 const SHIFT_HOURS = 9;
 const SHIFT_START_MIN = 10 * 60; // 10:00
 const SHIFT_END_MIN = SHIFT_START_MIN + SHIFT_HOURS * 60;
+
+/** "08:30" style label from minutes-since-midnight. */
+const minLabel = (min: number) =>
+  `${String(Math.floor(min / 60) % 24).padStart(2, "0")}:${String(min % 60).padStart(2, "0")}`;
 const BRANCH = "Karama Branch";
 
 const fmt = (d: Date) =>
@@ -496,6 +500,16 @@ function Index() {
                   percent={elapsed / totalMs}
                   lateMinutes={lateMinutes}
                   clockedOut={clockedOut}
+                  tomorrow={{
+                    day: tomorrowDate.toLocaleDateString("en-GB", { weekday: "long" }),
+                    date: tomorrowDate.toLocaleDateString("en-GB", {
+                      day: "2-digit",
+                      month: "short",
+                    }),
+                    start: minLabel(SHIFT_START_MIN),
+                    end: minLabel(SHIFT_END_MIN),
+                    location: "Karama Branch",
+                  }}
                   onClockOut={() => {
                     const out = new Date();
                     const ms = clockInAt ? Math.max(0, out.getTime() - clockInAt.getTime()) : 0;
