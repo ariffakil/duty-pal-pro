@@ -17,22 +17,30 @@ export function FaceScan({ status, progress, onScan }: Props) {
 
   return (
     <div className="flex flex-1 flex-col items-center justify-center px-6 pb-6 pt-2 text-center">
-      <div className="mb-4">
-        <p className="font-display text-lg font-bold tracking-wide text-accent">
+      <div className="mb-5 flex items-center gap-3 rounded-full border border-border/60 bg-secondary/25 px-4 py-1.5 backdrop-blur-md">
+        <p className="font-display text-[13px] font-bold uppercase tracking-[0.18em] text-foreground">
           {today.toLocaleDateString("en-GB", { weekday: "long" })}
         </p>
-        <p className="text-xs tabular-nums text-muted-foreground">
-          {today.toLocaleDateString("en-GB", { day: "2-digit", month: "long", year: "numeric" })}
+        <span className="h-3.5 w-px bg-border" />
+        <p className="text-[11px] font-medium tabular-nums tracking-wide text-muted-foreground">
+          {today.toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" })}
         </p>
       </div>
 
-      <FaceTouch
-        status={status}
-        onTouch={onScan}
-        progress={progress}
-        action="Clock in"
-        label="Tap the face to verify"
-      />
+      <div className="relative">
+        <span
+          className="pointer-events-none absolute -inset-6 rounded-full opacity-60 blur-2xl"
+          style={{ background: "var(--gradient-aurora)", opacity: 0.14 }}
+        />
+        <FaceTouch
+          status={status}
+          onTouch={onScan}
+          progress={progress}
+          action="Clock in"
+          label="Tap the face to verify"
+        />
+      </div>
+
 
 
       {status === "scanning" && <VerifyProgress progress={progress} steps={steps} />}
