@@ -218,19 +218,6 @@ export function LiveClock({
               strokeLinecap="round"
             />
           )}
-          <text
-            x="50"
-            y="68"
-            textAnchor="middle"
-            dominantBaseline="central"
-            fontSize="7"
-            fontWeight="700"
-            letterSpacing="0.2"
-            fill="var(--color-success)"
-            opacity="0.95"
-          >
-            {`${fmtMin(start!)} – ${fmtMin(end!)}`}
-          </text>
         </>
       )}
 
