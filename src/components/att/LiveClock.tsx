@@ -53,9 +53,9 @@ export function LiveClock({ size = 92 }: Props) {
       <defs>
 
         <radialGradient id="lc-face" cx="35%" cy="26%" r="85%">
-          <stop offset="0%" stopColor="#2a2c31" />
-          <stop offset="55%" stopColor="#17181c" />
-          <stop offset="100%" stopColor="#0b0c0e" />
+          <stop offset="0%" stopColor="var(--background)" />
+          <stop offset="55%" stopColor="var(--background)" />
+          <stop offset="100%" stopColor="var(--background)" />
         </radialGradient>
         <radialGradient id="lc-ball" cx="34%" cy="30%" r="75%">
           <stop offset="0%" stopColor="#fff4cf" />
