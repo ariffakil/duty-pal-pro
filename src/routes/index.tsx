@@ -139,6 +139,25 @@ function Index() {
     [speak],
   );
 
+  // Reminders are queued so two nudges never speak over each other.
+  const [reminderQueue, setReminderQueue] = useState<
+    { text: string; tone: BuddyMessage["tone"] }[]
+  >([]);
+  const queueReminder = useCallback((text: string, tone: BuddyMessage["tone"] = "info") => {
+    setReminderQueue((q) => (q.some((r) => r.text === text) ? q : [...q, { text, tone }]));
+  }, []);
+
+  useEffect(() => {
+    if (speaking || reminderQueue.length === 0) return;
+    const t = setTimeout(() => {
+      const [next, ...rest] = reminderQueue;
+      setReminderQueue(rest);
+      push(next.text, next.tone);
+    }, 900);
+    return () => clearTimeout(t);
+  }, [speaking, reminderQueue, push]);
+
+
   const attemptRef = useRef(0);
 
   // A follow-up prompt (late reason, leave request) that must wait for Nova to
