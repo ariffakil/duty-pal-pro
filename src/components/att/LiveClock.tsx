@@ -89,31 +89,53 @@ export function LiveClock({
           <stop offset="0%" stopColor={g0} />
           <stop offset="100%" stopColor={g1} />
         </linearGradient>
+        <radialGradient id="lc-face" cx="38%" cy="30%" r="78%">
+          <stop offset="0%" stopColor="var(--color-secondary)" stopOpacity="0.85" />
+          <stop offset="70%" stopColor="var(--color-background)" stopOpacity="0.9" />
+          <stop offset="100%" stopColor="var(--color-background)" stopOpacity="1" />
+        </radialGradient>
+        <linearGradient id="lc-rim" x1="10%" y1="0%" x2="90%" y2="100%">
+          <stop offset="0%" stopColor="var(--color-foreground)" stopOpacity="0.75" />
+          <stop offset="55%" stopColor="var(--color-foreground)" stopOpacity="0.18" />
+          <stop offset="100%" stopColor="var(--color-foreground)" stopOpacity="0.6" />
+        </linearGradient>
       </defs>
 
-      {/* Swiss dial: flat white face, hairline rim */}
-      <circle cx="50" cy="50" r="46" fill="#ffffff" />
-      <circle cx="50" cy="50" r="45.2" fill="none" stroke="#111111" strokeWidth="0.6" opacity="0.35" />
+      {/* Brushed dial face */}
+      <circle cx="50" cy="50" r="45" fill="url(#lc-face)" />
+
+      {/* Base dial ring */}
+      <circle cx="50" cy="50" r="42" fill="none" stroke="url(#lc-rim)" strokeWidth="1.6" />
 
       {/* Duty-hours arc */}
       {hasDuty && (
-        <path
-          d={arcPath(start!, end!, 42.5)}
-          fill="none"
-          stroke="url(#lc-duty)"
-          strokeDasharray={duty.phase === "tomorrow" ? "2.5 3" : undefined}
-          opacity={duty.phase === "tomorrow" ? 0.7 : 1}
-          strokeWidth="2.6"
-          strokeLinecap="butt"
-        />
+        <>
+          <path
+            d={arcPath(start!, end!, 42)}
+            fill="none"
+            stroke="url(#lc-duty)"
+            strokeWidth="6"
+            strokeLinecap="round"
+            opacity="0.12"
+          />
+          <path
+            d={arcPath(start!, end!, 42)}
+            fill="none"
+            stroke="url(#lc-duty)"
+            strokeDasharray={duty.phase === "tomorrow" ? "3 3" : undefined}
+            opacity={duty.phase === "tomorrow" ? 0.75 : 1}
+            strokeWidth="2"
+            strokeLinecap="round"
+          />
+        </>
       )}
 
-      {/* Minute ticks — hairlines */}
+      {/* Minute ticks */}
       {Array.from({ length: 60 }).map((_, i) => {
         if (i % 5 === 0) return null;
         const a = i * 6;
-        const p0 = polar(a, 39);
-        const p1 = polar(a, 36);
+        const p0 = polar(a, 38.5);
+        const p1 = polar(a, 36.5);
         return (
           <line
             key={`m${i}`}
@@ -121,19 +143,20 @@ export function LiveClock({
             y1={p0.y}
             x2={p1.x}
             y2={p1.y}
-            stroke="#111111"
-            strokeWidth="0.45"
-            opacity="0.55"
+            stroke="var(--color-foreground)"
+            strokeWidth="0.5"
+            strokeLinecap="round"
+            opacity="0.3"
           />
         );
       })}
 
-      {/* Hour ticks — bold bars, squared ends */}
+      {/* Hour tick marks — evenly spaced, clear of the numerals */}
       {Array.from({ length: 12 }).map((_, i) => {
         if (i % 3 === 0) return null;
         const a = i * 30;
-        const p0 = polar(a, 39);
-        const p1 = polar(a, 32);
+        const p0 = polar(a, 38);
+        const p1 = polar(a, 32.5);
         return (
           <line
             key={i}
@@ -141,20 +164,23 @@ export function LiveClock({
             y1={p0.y}
             x2={p1.x}
             y2={p1.y}
-            stroke="#111111"
-            strokeWidth="1.6"
+            stroke="var(--color-foreground)"
+            strokeWidth="1.4"
+            strokeLinecap="round"
+            opacity="0.85"
           />
         );
       })}
 
-      {/* Numerals — 12 / 3 / 6 / 9 */}
+
+      {/* Numerals */}
       {[
         { n: 12, a: 0 },
         { n: 3, a: 90 },
         { n: 6, a: 180 },
         { n: 9, a: 270 },
       ].map(({ n, a }) => {
-        const p = polar(a, 33.5);
+        const p = polar(a, 33);
         return (
           <text
             key={n}
@@ -162,45 +188,49 @@ export function LiveClock({
             y={p.y}
             textAnchor="middle"
             dominantBaseline="central"
-            fontSize="12"
+            fontSize="11"
             fontWeight="700"
-            letterSpacing="-0.4"
-            fill="#111111"
+            letterSpacing="-0.2"
+            fill="var(--color-foreground)"
           >
             {n}
           </text>
         );
       })}
 
-      {/* Inner duty progress ring */}
+      {/* Inner duty ring — today's actual duty window, filled as it elapses */}
       {hasDuty && (
         <>
           <path
             d={arcPath(start!, end!, 26)}
             fill="none"
-            stroke="#111111"
-            strokeWidth="1.2"
-            opacity="0.12"
+            stroke="var(--color-success)"
+            strokeWidth="1.6"
+            strokeLinecap="round"
+            opacity="0.28"
           />
           {elapsedEnd != null && elapsedEnd > start! && (
             <path
               d={arcPath(start!, elapsedEnd, 26)}
               fill="none"
               stroke="var(--color-success)"
-              strokeWidth="1.2"
+              strokeWidth="1.6"
+              strokeLinecap="round"
             />
           )}
         </>
       )}
 
-      {/* Hands — thin black baton hour/minute, red seconds */}
-      {hand(h * 30, 22, 2.6, "#111111", 5)}
-      {hand(m * 6, 32, 1.8, "#111111", 6)}
-      {hand(s * 6, 34, 0.7, "#d32f2f", 9)}
+      {/* Hands — brushed white hour/minute, accent sweep second */}
+      <g style={{ filter: "drop-shadow(0 1px 1.5px rgba(0,0,0,0.55))" }}>
+        {hand(h * 30, 21, 3.2, "var(--color-foreground)")}
+        {hand(m * 6, 30, 2.1, "var(--color-foreground)")}
+      </g>
+      {hand(s * 6, 34, 0.9, "var(--color-accent)", 8)}
 
-      <circle cx="50" cy="50" r="2.2" fill="#111111" />
-      <circle cx="50" cy="50" r="0.9" fill="#d32f2f" />
+      <circle cx="50" cy="50" r="3" fill="var(--color-accent)" />
+      <circle cx="50" cy="50" r="1.2" fill="var(--color-background)" />
+
     </svg>
   );
 }
-
