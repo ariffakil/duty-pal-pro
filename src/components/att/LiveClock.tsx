@@ -97,9 +97,9 @@ export function LiveClock({
         cy="50"
         r="42"
         fill="none"
-        stroke="var(--color-muted-foreground)"
+        stroke="var(--color-foreground)"
         strokeWidth="1.4"
-        opacity="0.3"
+        opacity="0.35"
       />
 
       {/* Duty-hours arc */}
@@ -138,7 +138,7 @@ export function LiveClock({
             y1={p0.y}
             x2={p1.x}
             y2={p1.y}
-            stroke="var(--color-muted-foreground)"
+            stroke="var(--color-foreground)"
             strokeWidth="0.8"
             strokeLinecap="round"
             opacity="0.55"
@@ -163,7 +163,7 @@ export function LiveClock({
             dominantBaseline="central"
             fontSize="9"
             fontWeight="500"
-            fill="var(--color-muted-foreground)"
+            fill="var(--color-foreground)"
           >
             {n}
           </text>
@@ -209,9 +209,9 @@ export function LiveClock({
       {/* Hands */}
       {hand(h * 30, 22, 1.5, "var(--color-foreground)")}
       {hand(m * 6, 32, 1.1, "var(--color-foreground)")}
-      {hand(s * 6, 35, 0.5, "var(--color-accent)", 4)}
+      {hand(s * 6, 35, 0.5, "var(--color-foreground)", 4)}
 
-      <circle cx="50" cy="50" r="2.4" fill="var(--color-background)" stroke="var(--color-accent)" strokeWidth="0.9" />
+      <circle cx="50" cy="50" r="2.4" fill="var(--color-background)" stroke="var(--color-foreground)" strokeWidth="0.9" />
     </svg>
   );
 }
