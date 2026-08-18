@@ -196,11 +196,11 @@ export function LiveClock({
             y="68"
             textAnchor="middle"
             dominantBaseline="central"
-            fontSize="6"
-            fontWeight="600"
-            letterSpacing="0.4"
+            fontSize="7"
+            fontWeight="700"
+            letterSpacing="0.2"
             fill="var(--color-success)"
-            opacity="0.9"
+            opacity="0.95"
           >
             {`${fmtMin(start!)} – ${fmtMin(end!)}`}
           </text>
@@ -208,9 +208,9 @@ export function LiveClock({
       )}
 
       {/* Hands */}
-      {hand(h * 30, 22, 1.5, "var(--color-foreground)")}
-      {hand(m * 6, 32, 1.1, "var(--color-foreground)")}
-      {hand(s * 6, 35, 0.5, "var(--color-foreground)", 4)}
+      {hand(h * 30, 21, 2, "var(--color-foreground)")}
+      {hand(m * 6, 30, 1.4, "var(--color-foreground)")}
+      {hand(s * 6, 34, 0.6, "var(--color-foreground)", 4)}
 
       <circle cx="50" cy="50" r="2.4" fill="var(--color-background)" stroke="var(--color-foreground)" strokeWidth="0.9" />
     </svg>
