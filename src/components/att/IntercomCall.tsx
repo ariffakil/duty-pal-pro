@@ -140,9 +140,9 @@ export function IntercomCall({ open, onClose }: { open: boolean; onClose: () => 
   const ss = String(seconds % 60).padStart(2, "0");
 
   return (
-    <div className="absolute inset-0 z-40 flex items-end justify-center bg-background/70 backdrop-blur-sm">
-      <div className="w-full animate-scale-in rounded-t-[2rem] border-t border-border bg-background/95 p-5 backdrop-blur-xl">
-        <div className="flex items-center gap-2">
+    <div className="absolute inset-0 z-40 flex flex-col bg-background">
+      <div className="flex h-full w-full flex-col px-5 pb-6 pt-5">
+        <div className="flex shrink-0 items-center gap-2">
           <PhoneCall className="h-4 w-4 text-primary" />
           <p className="font-display text-sm font-semibold">Intercom</p>
           <button
@@ -153,13 +153,13 @@ export function IntercomCall({ open, onClose }: { open: boolean; onClose: () => 
             aria-label="Close intercom"
             className="ml-auto text-muted-foreground transition-colors hover:text-foreground"
           >
-            <X className="h-4 w-4" />
+            <X className="h-5 w-5" />
           </button>
         </div>
 
         {state === "idle" || state === "error" ? (
-          <>
-            <div className="mt-4 grid grid-cols-2 gap-1 rounded-full border border-border bg-secondary/30 p-1">
+          <div className="flex min-h-0 flex-1 flex-col">
+            <div className="mt-4 grid shrink-0 grid-cols-2 gap-1 rounded-full border border-border bg-secondary/30 p-1">
               {(["directory", "keypad"] as const).map((t) => (
                 <button
                   key={t}
@@ -189,25 +189,30 @@ export function IntercomCall({ open, onClose }: { open: boolean; onClose: () => 
                 ))}
               </div>
             ) : (
-              <div className="mt-4 flex flex-col items-center">
-                <div className="flex h-10 w-full items-center justify-center">
-                  <p className="font-display text-2xl font-semibold tracking-[0.12em] text-foreground">
-                    {digits || <span className="text-muted-foreground/50">Enter extension</span>}
+              /* iPhone-style full-screen keypad */
+              <div className="flex min-h-0 flex-1 flex-col items-center justify-between py-4">
+                <div className="flex min-h-[3.5rem] w-full items-center justify-center">
+                  <p className="font-display text-[2rem] font-semibold tracking-[0.08em] text-foreground">
+                    {digits || (
+                      <span className="text-base font-normal tracking-normal text-muted-foreground/60">
+                        Enter extension
+                      </span>
+                    )}
                   </p>
                 </div>
 
-                <div className="mt-3 grid grid-cols-3 gap-3">
+                <div className="grid grid-cols-3 gap-x-6 gap-y-4">
                   {DIAL_KEYS.map(({ k, sub }) => (
                     <button
                       key={k}
                       onClick={() => press(k)}
-                      className="flex h-14 w-14 flex-col items-center justify-center rounded-full border border-border bg-secondary/40 transition-colors hover:border-primary/50 hover:bg-secondary/70 active:scale-95"
+                      className="flex h-[4.5rem] w-[4.5rem] flex-col items-center justify-center rounded-full border border-border bg-secondary/40 transition-all hover:border-primary/50 hover:bg-secondary/70 active:scale-95 active:bg-primary/20"
                     >
-                      <span className="font-display text-lg font-semibold leading-none text-foreground">
+                      <span className="font-display text-[1.6rem] font-semibold leading-none text-foreground">
                         {k}
                       </span>
                       {sub && (
-                        <span className="mt-0.5 text-[8px] font-medium tracking-[0.18em] text-muted-foreground">
+                        <span className="mt-1 text-[9px] font-semibold tracking-[0.2em] text-muted-foreground">
                           {sub}
                         </span>
                       )}
@@ -215,35 +220,35 @@ export function IntercomCall({ open, onClose }: { open: boolean; onClose: () => 
                   ))}
                 </div>
 
-                <div className="mt-5 flex w-full items-center justify-center gap-6">
-                  <span className="h-11 w-11" aria-hidden />
+                <div className="grid w-full max-w-[19rem] grid-cols-3 items-center justify-items-center">
+                  <span aria-hidden />
                   <button
                     onClick={() => digits && void dial({ id: digits, name: digits, role: "Extension" })}
                     disabled={!digits}
                     aria-label="Call extension"
-                    className="flex h-16 w-16 items-center justify-center rounded-full text-success-foreground shadow-lg transition-transform hover:scale-105 disabled:opacity-40"
+                    className="flex h-[4.5rem] w-[4.5rem] items-center justify-center rounded-full text-success-foreground shadow-lg transition-transform hover:scale-105 disabled:opacity-40"
                     style={{ backgroundColor: "var(--color-success)" }}
                   >
-                    <Phone className="h-7 w-7" />
+                    <Phone className="h-8 w-8" />
                   </button>
                   <button
                     onClick={() => setDigits((d) => d.slice(0, -1))}
                     disabled={!digits}
                     aria-label="Delete last digit"
-                    className="flex h-11 w-11 items-center justify-center rounded-full text-muted-foreground transition-colors hover:text-foreground disabled:opacity-30"
+                    className="flex h-12 w-12 items-center justify-center rounded-full text-muted-foreground transition-colors hover:text-foreground disabled:opacity-0"
                   >
-                    <Delete className="h-5 w-5" />
+                    <Delete className="h-6 w-6" />
                   </button>
                 </div>
               </div>
             )}
-            {error && <p className="mt-3 text-xs text-destructive">{error}</p>}
-            <p className="mt-3 text-[11px] text-muted-foreground">
+            {error && <p className="mt-3 shrink-0 text-xs text-destructive">{error}</p>}
+            <p className="mt-3 shrink-0 text-center text-[11px] text-muted-foreground">
               Calls are peer-to-peer over WebRTC with encrypted audio.
             </p>
-          </>
+          </div>
         ) : (
-          <div className="mt-5 flex flex-col items-center">
+          <div className="flex min-h-0 flex-1 flex-col items-center justify-center">
             <span className="relative flex h-24 w-24 items-center justify-center">
               <span
                 className="absolute inset-0 rounded-full border border-primary/50 animate-pulse-ring"
