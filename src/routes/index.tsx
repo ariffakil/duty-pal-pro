@@ -347,7 +347,7 @@ function Index() {
           >
             <div className="no-scrollbar relative flex max-h-[812px] min-h-[812px] flex-col overflow-y-auto rounded-[2.4rem] bg-background">
               <div className="flex items-center justify-between px-8 pt-6 text-xs text-muted-foreground">
-                <span className="font-medium text-foreground">{now ? fmt(now) : "--:--"}</span>
+                <span className="font-medium text-foreground">{now ? fmt(now) : "--:--:--"}</span>
                 <span className="flex items-center gap-1.5">
                   <Wifi className="h-3.5 w-3.5" /> 5G
                 </span>
@@ -413,15 +413,15 @@ function Index() {
                 <FaceScan status={stage} progress={progress} onScan={startScan} />
               ) : stage === "verified" ? (
                 <AttendanceResult
-                  clockIn={clockInAt ? fmt(clockInAt) : "10:30"}
+                  clockIn={clockInAt ? fmt(clockInAt) : "10:30:00"}
                   location="Karama, Dubai · Head Office"
                   lateMinutes={lateMinutes}
                   onContinue={() => setStage("day")}
                 />
               ) : stage === "summary" ? (
                 <DaySummary
-                  clockIn={clockInAt ? fmt(clockInAt) : "--:--"}
-                  clockOut={actualOutAt ? fmt(actualOutAt) : "--:--"}
+                  clockIn={clockInAt ? fmt(clockInAt) : "--:--:--"}
+                  clockOut={actualOutAt ? fmt(actualOutAt) : "--:--:--"}
                   totalWorked={workedText}
                   overtime={overtimeText}
                   lateMinutes={lateMinutes}
@@ -451,9 +451,9 @@ function Index() {
                 />
               ) : (
                 <ShiftDashboard
-                  clockIn={clockInAt ? fmt(clockInAt) : "--:--"}
+                  clockIn={clockInAt ? fmt(clockInAt) : "--:--:--"}
                   clockOut={
-                    actualOutAt ? fmt(actualOutAt) : clockOutAt ? fmt(clockOutAt) : "--:--"
+                    actualOutAt ? fmt(actualOutAt) : clockOutAt ? fmt(clockOutAt) : "--:--:--"
                   }
                   remaining={remaining}
                   percent={elapsed / totalMs}
