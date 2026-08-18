@@ -13,8 +13,19 @@ const steps = ["Looking for face", "Liveness check", "Matching template", "Serve
 export function FaceScan({ status, progress, onScan }: Props) {
   const activeStep = Math.min(steps.length - 1, Math.floor((progress / 100) * steps.length));
 
+  const today = new Date();
+
   return (
     <div className="flex flex-1 flex-col items-center justify-center px-6 pb-6 pt-2 text-center">
+      <div className="mb-4">
+        <p className="font-display text-lg font-bold tracking-wide text-accent">
+          {today.toLocaleDateString("en-GB", { weekday: "long" })}
+        </p>
+        <p className="text-xs tabular-nums text-muted-foreground">
+          {today.toLocaleDateString("en-GB", { day: "2-digit", month: "long", year: "numeric" })}
+        </p>
+      </div>
+
       <FaceTouch
         status={status}
         onTouch={onScan}
@@ -22,6 +33,7 @@ export function FaceScan({ status, progress, onScan }: Props) {
         action="Clock in"
         label="Tap the face to verify"
       />
+
 
       {status === "scanning" && <VerifyProgress progress={progress} steps={steps} />}
 
