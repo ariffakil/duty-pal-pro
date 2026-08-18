@@ -70,9 +70,11 @@ const CHIPS = ["My duty time", "Am I late?", "Next reminder", "Time remaining"];
 export function NovaChat({
   context,
   onSpeak,
+  speaking = false,
 }: {
   context: NovaContext;
   onSpeak: (text: string) => void;
+  speaking?: boolean;
 }) {
   const [open, setOpen] = useState(false);
   const [input, setInput] = useState("");
