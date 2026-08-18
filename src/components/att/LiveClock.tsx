@@ -90,7 +90,7 @@ export function LiveClock({ size = 92 }: Props) {
       <g style={{ filter: "drop-shadow(0 1.5px 2px rgba(0,0,0,0.7))" }}>
         {hand(h * 30, 24, 2.2, "url(#lc-hand)")}
         {hand(m * 6, 35, 1.8, "url(#lc-hand)")}
-        {hand(s * 6, 38, 0.7, brass, 11)}
+        {hand(s * 6, 38, 0.7, "#e5342f", 11)}
       </g>
 
       <circle cx="50" cy="50" r="2.2" fill="url(#lc-ball)" />
