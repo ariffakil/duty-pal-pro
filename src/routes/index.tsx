@@ -150,8 +150,9 @@ function Index() {
   useEffect(() => {
     if (speaking || reminderQueue.length === 0) return;
     const t = setTimeout(() => {
-      const [next, ...rest] = reminderQueue;
-      setReminderQueue(rest);
+      const next = reminderQueue[0];
+      if (!next) return;
+      setReminderQueue((q) => q.slice(1));
       push(next.text, next.tone);
     }, 900);
     return () => clearTimeout(t);
