@@ -183,11 +183,8 @@ export function NovaChat({
               draggable={false}
               className="relative h-20 w-20 animate-float-soft object-contain drop-shadow-[0_10px_24px_rgba(0,0,0,0.45)]"
             />
-            {voice.listening || speaking ? (
-              <span
-                className={`absolute -bottom-1 left-1/2 flex -translate-x-1/2 items-end gap-[3px] rounded-full px-2 py-1`}
-
-              >
+            {(voice.listening || speaking) && (
+              <span className="absolute -bottom-1 left-1/2 flex -translate-x-1/2 items-end gap-[3px] rounded-full px-2 py-1">
                 {[0, 1, 2, 3].map((i) => (
                   <span
                     key={i}
@@ -202,9 +199,8 @@ export function NovaChat({
                   />
                 ))}
               </span>
-            ) : (
-              <span className="absolute right-2 top-2 h-3 w-3 rounded-full bg-success ring-2 ring-background" />
             )}
+
           </button>
         </div>
       )}
