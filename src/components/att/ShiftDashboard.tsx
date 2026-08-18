@@ -26,7 +26,7 @@ export function ShiftDashboard({
   const [intercomOpen, setIntercomOpen] = useState(false);
 
   return (
-    <div className="px-6 pb-6 pt-2">
+    <div className="px-6 pb-32 pt-2">
 
       <div className="flex items-center justify-between">
         <p className="text-[11px] uppercase tracking-[0.22em] text-muted-foreground">
