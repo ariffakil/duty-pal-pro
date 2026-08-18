@@ -241,6 +241,7 @@ export function IntercomCall({ open, onClose }: { open: boolean; onClose: () => 
                     <Delete className="h-6 w-6" />
                   </button>
                 </div>
+                </div>
               </div>
             )}
             {error && <p className="mt-3 shrink-0 text-xs text-destructive">{error}</p>}
