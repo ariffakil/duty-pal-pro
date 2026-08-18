@@ -295,3 +295,34 @@
 @utility animate-nova-look {
   animation: nova-look 6s ease-in-out infinite;
 }
+
+@keyframes nova-wave-alt {
+  0%, 100% { transform: rotate(0deg); }
+  30% { transform: rotate(16deg); }
+  65% { transform: rotate(-10deg); }
+}
+
+@keyframes nova-bob {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  35% { transform: translateY(-1.2px) rotate(-2deg); }
+  70% { transform: translateY(0.8px) rotate(2deg); }
+}
+
+@keyframes nova-talk {
+  0%, 100% { transform: scaleY(0.4); }
+  25% { transform: scaleY(1.25); }
+  50% { transform: scaleY(0.7); }
+  75% { transform: scaleY(1.5); }
+}
+
+@utility animate-nova-wave-alt {
+  animation: nova-wave-alt 3.6s ease-in-out infinite;
+}
+
+@utility animate-nova-bob {
+  animation: nova-bob 4.5s ease-in-out infinite;
+}
+
+@utility animate-nova-talk {
+  animation: nova-talk 0.35s ease-in-out infinite;
+}

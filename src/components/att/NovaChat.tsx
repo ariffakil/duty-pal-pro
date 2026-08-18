@@ -2,7 +2,6 @@ import { useEffect, useRef, useState } from "react";
 import { X, Send, Mic, Square, Languages, Check } from "lucide-react";
 
 import { NovaMascot } from "@/components/att/NovaMascot";
-import novaAvatar from "@/assets/nova-avatar.png.asset.json";
 
 
 import { useSpeechInput } from "@/hooks/useSpeechInput";
@@ -177,11 +176,10 @@ export function NovaChat({
               />
             )}
 
-            <img
-              src={novaAvatar.url}
-              alt="Nova AI assistant"
-              draggable={false}
-              className="relative h-20 w-20 animate-float-soft object-contain drop-shadow-[0_10px_24px_rgba(0,0,0,0.45)]"
+            <NovaMascot
+              speaking={speaking}
+              listening={voice.listening}
+              className="relative h-20 w-20 animate-float-soft drop-shadow-[0_10px_24px_rgba(0,0,0,0.45)]"
             />
             {(voice.listening || speaking) && (
               <span className="absolute -bottom-1 left-1/2 flex -translate-x-1/2 items-end gap-[3px] rounded-full px-2 py-1">
@@ -210,7 +208,11 @@ export function NovaChat({
       {open && (
         <div className="absolute inset-x-0 bottom-0 z-30 flex max-h-[78%] flex-col rounded-t-[2rem] border-t border-border bg-background/95 backdrop-blur-xl">
           <div className="flex items-center gap-3 px-5 pb-3 pt-4">
-            <NovaMascot className="h-9 w-9 animate-float-soft" />
+            <NovaMascot
+              speaking={speaking}
+              listening={voice.listening}
+              className="h-9 w-9 animate-float-soft"
+            />
 
             <div className="flex-1">
               <p className="text-sm font-semibold">Ask Nova</p>
