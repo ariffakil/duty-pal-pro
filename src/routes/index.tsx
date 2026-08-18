@@ -57,7 +57,7 @@ const SHIFT_END_MIN = SHIFT_START_MIN + SHIFT_HOURS * 60;
 const BRANCH = "Karama Branch";
 
 const fmt = (d: Date) =>
-  `${String(d.getHours()).padStart(2, "0")}:${String(d.getMinutes()).padStart(2, "0")}`;
+  `${String(d.getHours()).padStart(2, "0")}:${String(d.getMinutes()).padStart(2, "0")}:${String(d.getSeconds()).padStart(2, "0")}`;
 
 type Stage = "idle" | "scanning" | "failed" | "verified" | "day" | "summary" | "period";
 
