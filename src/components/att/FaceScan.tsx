@@ -38,7 +38,7 @@ export function FaceScan({ status, progress, onScan }: Props) {
           onTouch={onScan}
           progress={progress}
           action="Clock in"
-          label="Tap the face to verify"
+          label="Tap the clock to verify face"
         />
       </div>
 
