@@ -69,7 +69,7 @@ export function IntercomCall({ open, onClose }: { open: boolean; onClose: () => 
       pcRef.current = pc;
       stream.getAudioTracks().forEach((track) => pc.addTrack(track, stream));
       pc.ontrack = (e) => {
-        if (audioRef.current) audioRef.current.srcObject = e.streams[0];
+        if (audioRef.current && e.streams[0]) audioRef.current.srcObject = e.streams[0];
       };
       pc.onconnectionstatechange = () => {
         if (pc.connectionState === "failed" || pc.connectionState === "disconnected") hangUp();
