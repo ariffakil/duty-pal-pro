@@ -177,11 +177,10 @@ export function NovaChat({
               />
             )}
 
-            <img
-              src={novaAvatar.url}
-              alt="Nova AI assistant"
-              draggable={false}
-              className="relative h-20 w-20 animate-float-soft object-contain drop-shadow-[0_10px_24px_rgba(0,0,0,0.45)]"
+            <NovaMascot
+              speaking={speaking}
+              listening={voice.listening}
+              className="relative h-20 w-20 animate-float-soft drop-shadow-[0_10px_24px_rgba(0,0,0,0.45)]"
             />
             {(voice.listening || speaking) && (
               <span className="absolute -bottom-1 left-1/2 flex -translate-x-1/2 items-end gap-[3px] rounded-full px-2 py-1">
