@@ -66,10 +66,10 @@ export function ShiftDashboard({
         </div>
         <div className="rounded-2xl border border-border bg-secondary/30 p-4">
           <p className="flex items-center gap-1.5 text-[11px] uppercase tracking-wider text-muted-foreground">
-            <AnalogClock time={clockedOut ? clockOut : "--:--"} tone="accent" /> Clock out
+            <AnalogClock time={clockedOut ? clockOut : "--:--:--"} tone="accent" /> Clock out
           </p>
           <p className="mt-1 font-display text-2xl font-semibold tabular-nums text-muted-foreground">
-            {clockedOut ? clockOut : "--:--"}
+            {clockedOut ? clockOut : "--:--:--"}
           </p>
         </div>
       </div>
