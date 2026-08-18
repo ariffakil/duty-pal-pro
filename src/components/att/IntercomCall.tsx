@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { Mic, MicOff, PhoneOff, PhoneCall, Phone, Delete, X, Volume2 } from "lucide-react";
+import { Mic, MicOff, PhoneOff, PhoneCall, Phone, Delete, X, Volume2, Video, VideoOff } from "lucide-react";
 
 const DIAL_KEYS: { k: string; sub?: string }[] = [
   { k: "1" },
@@ -40,6 +40,8 @@ export function IntercomCall({ open, onClose }: { open: boolean; onClose: () => 
   const [error, setError] = useState<string | null>(null);
   const [tab, setTab] = useState<"directory" | "keypad">("directory");
   const [digits, setDigits] = useState("");
+  const [mode, setMode] = useState<"audio" | "video">("audio");
+  const [camOff, setCamOff] = useState(false);
 
   /** Append a key press with a soft DTMF-style tone. */
   const press = (k: string) => {
@@ -69,6 +71,8 @@ export function IntercomCall({ open, onClose }: { open: boolean; onClose: () => 
   const pcRef = useRef<RTCPeerConnection | null>(null);
   const streamRef = useRef<MediaStream | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const localVideoRef = useRef<HTMLVideoElement | null>(null);
+  const remoteVideoRef = useRef<HTMLVideoElement | null>(null);
 
   const hangUp = useCallback(() => {
     streamRef.current?.getTracks().forEach((t) => t.stop());
@@ -76,6 +80,7 @@ export function IntercomCall({ open, onClose }: { open: boolean; onClose: () => 
     pcRef.current?.close();
     pcRef.current = null;
     setMuted(false);
+    setCamOff(false);
     setSeconds(0);
     setState((s) => (s === "idle" ? "idle" : "ended"));
   }, []);
@@ -102,27 +107,42 @@ export function IntercomCall({ open, onClose }: { open: boolean; onClose: () => 
     setError(null);
     setState("connecting");
     try {
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      const wantsVideo = mode === "video";
+      const stream = await navigator.mediaDevices.getUserMedia({
+        audio: true,
+        video: wantsVideo ? { facingMode: "user" } : false,
+      });
       streamRef.current = stream;
+      if (localVideoRef.current) localVideoRef.current.srcObject = stream;
 
       const pc = new RTCPeerConnection({
         iceServers: [{ urls: "stun:stun.l.google.com:19302" }],
       });
       pcRef.current = pc;
-      stream.getAudioTracks().forEach((track) => pc.addTrack(track, stream));
+      stream.getTracks().forEach((track) => pc.addTrack(track, stream));
       pc.ontrack = (e) => {
-        if (audioRef.current && e.streams[0]) audioRef.current.srcObject = e.streams[0];
+        const remote = e.streams[0];
+        if (!remote) return;
+        if (audioRef.current) audioRef.current.srcObject = remote;
+        if (remoteVideoRef.current) remoteVideoRef.current.srcObject = remote;
       };
       pc.onconnectionstatechange = () => {
         if (pc.connectionState === "failed" || pc.connectionState === "disconnected") hangUp();
       };
 
-      const offer = await pc.createOffer({ offerToReceiveAudio: true });
+      const offer = await pc.createOffer({
+        offerToReceiveAudio: true,
+        offerToReceiveVideo: wantsVideo,
+      });
       await pc.setLocalDescription(offer);
       // Offer is ready for the signalling channel of the intercom gateway.
       setState("live");
     } catch {
-      setError("Microphone permission is needed for intercom calls.");
+      setError(
+        mode === "video"
+          ? "Camera and microphone permission is needed for video calls."
+          : "Microphone permission is needed for intercom calls.",
+      );
       setState("error");
     }
   };
@@ -133,6 +153,37 @@ export function IntercomCall({ open, onClose }: { open: boolean; onClose: () => 
     track.enabled = !track.enabled;
     setMuted(!track.enabled);
   };
+
+  const toggleCamera = () => {
+    const track = streamRef.current?.getVideoTracks()[0];
+    if (!track) return;
+    track.enabled = !track.enabled;
+    setCamOff(!track.enabled);
+  };
+
+  const modeSelector = (
+    <div className="grid w-full max-w-[19rem] grid-cols-2 gap-2 rounded-full border border-border bg-secondary/30 p-1">
+      {([
+        { id: "audio" as const, label: "Audio", Icon: Phone },
+        { id: "video" as const, label: "Video", Icon: Video },
+      ]).map(({ id, label, Icon }) => (
+        <button
+          key={id}
+          onClick={() => setMode(id)}
+          aria-pressed={mode === id}
+          aria-label={`${label} call`}
+          className={`flex items-center justify-center gap-2 rounded-full py-1.5 text-xs font-semibold transition-colors ${
+            mode === id
+              ? "bg-primary text-primary-foreground"
+              : "text-muted-foreground hover:text-foreground"
+          }`}
+        >
+          <Icon className="h-4 w-4" />
+          {label}
+        </button>
+      ))}
+    </div>
+  );
 
   if (!open) return null;
 
@@ -174,6 +225,8 @@ export function IntercomCall({ open, onClose }: { open: boolean; onClose: () => 
                 </button>
               ))}
             </div>
+
+            <div className="mt-3 flex shrink-0 justify-center">{modeSelector}</div>
 
             {tab === "directory" ? (
               <div className="mt-4 grid grid-cols-2 gap-3">
@@ -230,7 +283,7 @@ export function IntercomCall({ open, onClose }: { open: boolean; onClose: () => 
                     className="flex h-[4.5rem] w-[4.5rem] items-center justify-center rounded-full text-success-foreground shadow-lg transition-transform hover:scale-105 disabled:opacity-40"
                     style={{ backgroundColor: "var(--color-success)" }}
                   >
-                    <Phone className="h-8 w-8" />
+                    {mode === "video" ? <Video className="h-8 w-8" /> : <Phone className="h-8 w-8" />}
                   </button>
                   <button
                     onClick={() => setDigits((d) => d.slice(0, -1))}
@@ -248,6 +301,18 @@ export function IntercomCall({ open, onClose }: { open: boolean; onClose: () => 
           </div>
         ) : (
           <div className="flex min-h-0 flex-1 flex-col items-center justify-center">
+            {mode === "video" && (
+              <div className="relative mb-5 h-56 w-full max-w-[19rem] overflow-hidden rounded-3xl border border-border bg-secondary/30">
+                <video ref={remoteVideoRef} autoPlay playsInline className="h-full w-full object-cover" />
+                <video
+                  ref={localVideoRef}
+                  autoPlay
+                  playsInline
+                  muted
+                  className="absolute bottom-3 right-3 h-24 w-20 rounded-xl border border-border object-cover"
+                />
+              </div>
+            )}
             <span className="relative flex h-24 w-24 items-center justify-center">
               <span
                 className="absolute inset-0 rounded-full border border-primary/50 animate-pulse-ring"
@@ -277,6 +342,16 @@ export function IntercomCall({ open, onClose }: { open: boolean; onClose: () => 
               >
                 {muted ? <MicOff className="h-5 w-5" /> : <Mic className="h-5 w-5" />}
               </button>
+              {mode === "video" && (
+                <button
+                  onClick={toggleCamera}
+                  disabled={state !== "live"}
+                  aria-label={camOff ? "Turn camera on" : "Turn camera off"}
+                  className="flex h-12 w-12 items-center justify-center rounded-full border border-border bg-secondary/40 text-foreground transition-colors hover:border-primary/40 disabled:opacity-40"
+                >
+                  {camOff ? <VideoOff className="h-5 w-5" /> : <Video className="h-5 w-5" />}
+                </button>
+              )}
               <button
                 onClick={hangUp}
                 aria-label="End call"
