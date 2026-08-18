@@ -79,7 +79,7 @@ export function ShiftDashboard({
         <MapPin className="h-3.5 w-3.5 text-primary" /> Karama, Dubai · Gate 2 reader
       </p>
 
-      <div className="mt-12 grid grid-cols-4 gap-2.5">
+      <div className="sticky bottom-0 z-20 mt-12 grid grid-cols-4 gap-2.5 border-t border-border/40 bg-background/85 py-3 backdrop-blur-xl">
         {[
           { icon: Coffee, label: "Break", onClick: undefined },
           { icon: CalendarDays, label: "Leave", onClick: undefined },
