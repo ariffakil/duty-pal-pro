@@ -208,7 +208,11 @@ export function NovaChat({
       {open && (
         <div className="absolute inset-x-0 bottom-0 z-30 flex max-h-[78%] flex-col rounded-t-[2rem] border-t border-border bg-background/95 backdrop-blur-xl">
           <div className="flex items-center gap-3 px-5 pb-3 pt-4">
-            <NovaMascot className="h-9 w-9 animate-float-soft" />
+            <NovaMascot
+              speaking={speaking}
+              listening={voice.listening}
+              className="h-9 w-9 animate-float-soft"
+            />
 
             <div className="flex-1">
               <p className="text-sm font-semibold">Ask Nova</p>
