@@ -353,13 +353,30 @@ function Index() {
                 </span>
               </div>
 
-              <div className="flex items-center px-6 pt-3">
+              <div className="flex items-end justify-between px-6 pt-3">
                 <img
                   src={mytimeLogo.url}
                   alt="MyTime Cloud logo"
                   className="h-9 w-auto max-w-[190px] object-contain drop-shadow-[0_0_10px_rgba(255,255,255,0.35)]"
                 />
+                <div className="text-right leading-tight">
+                  <p className="font-display text-sm font-bold text-accent">
+                    {now
+                      ? now.toLocaleDateString("en-GB", { weekday: "long" })
+                      : "--"}
+                  </p>
+                  <p className="text-[11px] tabular-nums text-muted-foreground">
+                    {now
+                      ? now.toLocaleDateString("en-GB", {
+                          day: "2-digit",
+                          month: "short",
+                          year: "numeric",
+                        })
+                      : "--"}
+                  </p>
+                </div>
               </div>
+
 
 
               <header className="flex items-center gap-3 px-6 pb-1 pt-4">
