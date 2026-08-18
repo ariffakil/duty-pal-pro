@@ -166,15 +166,55 @@ export function NovaChat({
               openChat();
             }}
             aria-label="Ask Nova by voice or text"
+            aria-live="polite"
             className="relative flex h-20 w-20 items-center justify-center"
           >
+            {(voice.listening || speaking) && (
+              <>
+                <span
+                  className={`absolute inset-1 rounded-full blur-xl ${
+                    voice.listening ? "bg-accent/45" : "bg-primary/45"
+                  }`}
+                  style={{ animation: "pulse 1.6s ease-in-out infinite" }}
+                />
+                <span
+                  className={`absolute inset-0 rounded-full border animate-pulse-ring ${
+                    voice.listening ? "border-accent/60" : "border-primary/60"
+                  }`}
+                />
+              </>
+            )}
             <img
               src={novaAvatar.url}
               alt="Nova AI assistant"
               draggable={false}
-              className="h-20 w-20 animate-float-soft object-contain drop-shadow-[0_10px_24px_rgba(0,0,0,0.45)]"
+              className="relative h-20 w-20 animate-float-soft object-contain drop-shadow-[0_10px_24px_rgba(0,0,0,0.45)]"
             />
-            <span className="absolute right-2 top-2 h-3 w-3 rounded-full bg-success ring-2 ring-background" />
+            {voice.listening || speaking ? (
+              <span
+                className={`absolute -bottom-1 left-1/2 flex -translate-x-1/2 items-end gap-[3px] rounded-full border px-2 py-1 backdrop-blur ${
+                  voice.listening
+                    ? "border-accent/40 bg-background/80"
+                    : "border-primary/40 bg-background/80"
+                }`}
+              >
+                {[0, 1, 2, 3].map((i) => (
+                  <span
+                    key={i}
+                    className={`w-[2px] rounded-full ${
+                      voice.listening ? "bg-accent" : "bg-primary"
+                    }`}
+                    style={{
+                      height: [6, 11, 8, 13][i],
+                      animation: "pulse 0.7s ease-in-out infinite",
+                      animationDelay: `${i * 0.12}s`,
+                    }}
+                  />
+                ))}
+              </span>
+            ) : (
+              <span className="absolute right-2 top-2 h-3 w-3 rounded-full bg-success ring-2 ring-background" />
+            )}
           </button>
         </div>
       )}
