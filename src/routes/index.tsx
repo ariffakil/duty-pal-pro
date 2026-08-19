@@ -1,8 +1,10 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useSmartReminders } from "@/hooks/useSmartReminders";
-import { Bell, ChevronLeft, ShieldCheck, Wifi } from "lucide-react";
+import { Bell, ChevronLeft, Moon, ShieldCheck, Sun, Wifi } from "lucide-react";
 import mytimeLogo from "@/assets/mytime-logo.png.asset.json";
+import { useTheme } from "@/hooks/useTheme";
+
 
 
 import { FaceScan } from "@/components/att/FaceScan";
@@ -66,7 +68,9 @@ const fmt = (d: Date) =>
 type Stage = "idle" | "scanning" | "failed" | "verified" | "day" | "summary" | "period";
 
 function Index() {
+  const { theme, toggle: toggleTheme } = useTheme();
   const [stage, setStage] = useState<Stage>("idle");
+
   const [progress, setProgress] = useState(0);
   const [clockInAt, setClockInAt] = useState<Date | null>(null);
   const [clockedOut, setClockedOut] = useState(false);
@@ -387,7 +391,7 @@ function Index() {
                 <img
                   src={mytimeLogo.url}
                   alt="MyTime Cloud logo"
-                  className="h-6 w-auto max-w-[130px] object-contain brightness-0 invert drop-shadow-[0_0_10px_rgba(255,255,255,0.4)]"
+                  className="h-6 w-auto max-w-[130px] object-contain brightness-0 dark:invert dark:drop-shadow-[0_0_10px_rgba(255,255,255,0.4)]"
                 />
                 <div className="text-right leading-tight">
                   <p className="font-display text-sm font-bold text-accent">
@@ -436,12 +440,20 @@ function Index() {
                   {clockedOut ? "Closed" : clockInAt ? "On duty" : "Active"}
                 </span>
                 <button
+                  onClick={toggleTheme}
+                  className="flex h-9 w-9 items-center justify-center rounded-xl border border-primary/20 bg-secondary/40"
+                  aria-label={theme === "dark" ? "Switch to white mode" : "Switch to black mode"}
+                >
+                  {theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+                </button>
+                <button
                   className="relative flex h-9 w-9 items-center justify-center rounded-xl border border-primary/20 bg-secondary/40"
                   aria-label="Notifications"
                 >
                   <Bell className="h-4 w-4" />
                   <span className="absolute right-2 top-2 h-1.5 w-1.5 rounded-full bg-accent" />
                 </button>
+
               </header>
 
 
