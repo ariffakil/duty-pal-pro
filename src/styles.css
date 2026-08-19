@@ -65,6 +65,78 @@
   --radius: 1.1rem;
   --font-display: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
   --font-sans: "DM Sans", ui-sans-serif, system-ui, sans-serif;
+  /* Light ("white") mode */
+  --background: oklch(0.985 0.003 250);
+  --foreground: oklch(0.22 0.03 252);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.22 0.03 252);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.22 0.03 252);
+  --primary: oklch(0.62 0.13 172);
+  --primary-foreground: oklch(0.99 0.003 250);
+  --primary-glow: oklch(0.72 0.12 195);
+  --secondary: oklch(0.955 0.006 250);
+  --secondary-foreground: oklch(0.28 0.03 250);
+  --muted: oklch(0.95 0.006 250);
+  --muted-foreground: oklch(0.5 0.02 250);
+  --accent: oklch(0.55 0.13 232);
+  --accent-foreground: oklch(0.99 0.003 250);
+  --destructive: oklch(0.58 0.2 22);
+  --destructive-foreground: oklch(0.99 0.003 250);
+  --success: oklch(0.6 0.14 160);
+  --success-foreground: oklch(0.99 0.003 250);
+  --warning: oklch(0.72 0.14 75);
+  --warning-foreground: oklch(0.2 0.026 252);
+  --border: oklch(0.22 0.03 252 / 12%);
+  --input: oklch(0.22 0.03 252 / 16%);
+  --ring: oklch(0.62 0.13 172);
+  --chart-1: oklch(0.62 0.13 172);
+  --chart-2: oklch(0.55 0.13 232);
+  --chart-3: oklch(0.72 0.14 75);
+  --chart-4: oklch(0.58 0.2 22);
+  --chart-5: oklch(0.72 0.12 195);
+  --sidebar: oklch(0.97 0.004 250);
+  --sidebar-foreground: oklch(0.22 0.03 252);
+  --sidebar-primary: oklch(0.62 0.13 172);
+  --sidebar-primary-foreground: oklch(0.99 0.003 250);
+  --sidebar-accent: oklch(0.95 0.006 250);
+  --sidebar-accent-foreground: oklch(0.22 0.03 252);
+  --sidebar-border: oklch(0.22 0.03 252 / 12%);
+  --sidebar-ring: oklch(0.62 0.13 172);
+
+  --gradient-aurora: linear-gradient(
+    140deg,
+    oklch(0.7 0.14 168),
+    oklch(0.62 0.13 205) 55%,
+    oklch(0.55 0.14 262)
+  );
+  --gradient-surface: linear-gradient(
+    158deg,
+    oklch(1 0 0 / 0.95),
+    oklch(0.96 0.006 250 / 0.9)
+  );
+  --gradient-halo: radial-gradient(
+    circle at 50% 0%,
+    oklch(0.62 0.13 172 / 0.14),
+    oklch(0.55 0.14 262 / 0.08) 45%,
+    transparent 70%
+  );
+  --shadow-elevated:
+    0 32px 70px -34px oklch(0.3 0.03 252 / 0.4),
+    0 0 0 1px oklch(0.22 0.03 252 / 0.06);
+  --shadow-glow: 0 0 40px -10px oklch(0.62 0.13 172 / 0.35);
+
+  /* Analog clock palette */
+  --clock-face: oklch(0.99 0.002 250);
+  --clock-ring: oklch(0.94 0.005 250);
+  --clock-inner: oklch(0.97 0.003 250);
+  --clock-mark: oklch(0.18 0.02 252);
+  --clock-hand: oklch(0.14 0.02 252);
+  --clock-shadow-dark: oklch(0.2 0.02 252 / 0.16);
+  --clock-shadow-light: oklch(1 0 0 / 0.95);
+}
+
+.dark {
   --background: oklch(0.16 0.026 252);
   --foreground: oklch(0.975 0.006 220);
   --card: oklch(0.215 0.028 248);
@@ -125,7 +197,15 @@
     0 0 0 1px oklch(0.82 0.15 172 / 0.08);
   --shadow-glow: 0 0 48px -6px oklch(0.82 0.15 172 / 0.4);
 
+  --clock-face: oklch(0.19 0.026 252);
+  --clock-ring: oklch(0.23 0.028 250);
+  --clock-inner: oklch(0.21 0.027 251);
+  --clock-mark: oklch(0.97 0.005 220);
+  --clock-hand: oklch(0.99 0.003 220);
+  --clock-shadow-dark: oklch(0.04 0.01 252 / 0.75);
+  --clock-shadow-light: oklch(1 0 0 / 0.06);
 }
+
 
 @theme inline {
   --font-display: var(--font-display);
