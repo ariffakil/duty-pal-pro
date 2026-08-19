@@ -14,8 +14,8 @@ const polar = (angleDeg: number, r: number) => {
 };
 
 /**
- * Minimalist luxury wall clock: matte black dial, brass ball hour markers and
- * slim brass hands.
+ * Minimal neumorphic wall clock. Face, rings, marks and hands all read from
+ * the `--clock-*` design tokens, so it adapts to both light and dark mode.
  */
 export function LiveClock({ size = 92 }: Props) {
   const [now, setNow] = useState(() => new Date(2020, 0, 1, 0, 0, 0));
@@ -30,9 +30,7 @@ export function LiveClock({ size = 92 }: Props) {
   const m = now.getMinutes() + s / 60;
   const h = (now.getHours() % 12) + m / 60;
 
-  const brass = "#d9c48a";
-
-  const hand = (angle: number, length: number, width: number, stroke: string, tail = 8) => {
+  const hand = (angle: number, length: number, width: number, stroke: string, tail = 4) => {
     const a = polar(angle, -tail);
     const b = polar(angle, length);
     return (
@@ -43,7 +41,7 @@ export function LiveClock({ size = 92 }: Props) {
         y2={b.y}
         stroke={stroke}
         strokeWidth={width}
-        strokeLinecap="butt"
+        strokeLinecap="round"
       />
     );
   };
@@ -54,63 +52,63 @@ export function LiveClock({ size = 92 }: Props) {
       height={size}
       viewBox="0 0 100 100"
       aria-hidden="true"
-      style={{
-        overflow: "visible",
-        filter:
-          "drop-shadow(0 18px 28px rgba(0,0,0,0.55)) drop-shadow(0 6px 10px rgba(0,0,0,0.4))",
-      }}
+      style={{ overflow: "visible" }}
     >
       <defs>
-
-        <radialGradient id="lc-face" cx="35%" cy="26%" r="85%">
-          <stop offset="0%" stopColor="var(--background)" />
-          <stop offset="55%" stopColor="var(--background)" />
-          <stop offset="100%" stopColor="var(--background)" />
-        </radialGradient>
-        <radialGradient id="lc-ball" cx="34%" cy="30%" r="75%">
-          <stop offset="0%" stopColor="#ffffff" />
-          <stop offset="55%" stopColor="#f2f2f2" />
-          <stop offset="100%" stopColor="#c9c9c9" />
-        </radialGradient>
-        <linearGradient id="lc-rim" x1="20%" y1="0%" x2="80%" y2="100%">
-          <stop offset="0%" stopColor="#000000" stopOpacity="0.55" />
-          <stop offset="50%" stopColor="#000000" stopOpacity="0.08" />
-          <stop offset="100%" stopColor="#ffffff" stopOpacity="0.12" />
-        </linearGradient>
-        <linearGradient id="lc-hand" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stopColor="#ffffff" />
-          <stop offset="100%" stopColor="#e8e8e8" />
-        </linearGradient>
+        <filter id="lc-soft" x="-40%" y="-40%" width="180%" height="180%">
+          <feDropShadow
+            dx="2.5"
+            dy="3"
+            stdDeviation="3"
+            floodColor="var(--clock-shadow-dark)"
+          />
+          <feDropShadow
+            dx="-2.5"
+            dy="-3"
+            stdDeviation="3"
+            floodColor="var(--clock-shadow-light)"
+          />
+        </filter>
       </defs>
 
-      {/* Matte black dial */}
-      <circle cx="50" cy="50" r="49" fill="url(#lc-face)" />
-      <circle cx="50" cy="50" r="48.4" fill="none" stroke="#000" strokeOpacity="0.6" strokeWidth="1.2" />
-      {/* inner rim shading for depth */}
-      <circle cx="50" cy="50" r="46.5" fill="none" stroke="url(#lc-rim)" strokeWidth="3" />
+      {/* outer soft plate */}
+      <circle cx="50" cy="50" r="48" fill="var(--clock-ring)" filter="url(#lc-soft)" />
+      {/* main dial */}
+      <circle cx="50" cy="50" r="40.5" fill="var(--clock-face)" filter="url(#lc-soft)" />
+      {/* inner disc */}
+      <circle cx="50" cy="50" r="21" fill="var(--clock-inner)" filter="url(#lc-soft)" />
 
-
-
-
-      {/* Brass ball hour markers */}
-      {Array.from({ length: 12 }).map((_, i) => {
-        const p = polar(i * 30, 39.5);
+      {/* four bold marks at 12 / 3 / 6 / 9 */}
+      {[0, 90, 180, 270].map((a) => {
+        const p1 = polar(a, 36);
+        const p2 = polar(a, 29.5);
         return (
-          <g key={i}>
-            <circle cx={p.x} cy={p.y + 0.4} r={1.1} fill="#000" opacity="0.5" />
-            <circle cx={p.x} cy={p.y} r={1.1} fill="url(#lc-ball)" />
-          </g>
+          <line
+            key={a}
+            x1={p1.x}
+            y1={p1.y}
+            x2={p2.x}
+            y2={p2.y}
+            stroke="var(--clock-mark)"
+            strokeWidth="2.6"
+            strokeLinecap="butt"
+          />
         );
       })}
 
-      {/* Hands */}
-      <g style={{ filter: "drop-shadow(0 1.5px 2px rgba(0,0,0,0.7))" }}>
-        {hand(h * 30, 24, 2.2, "url(#lc-hand)")}
-        {hand(m * 6, 35, 1.8, "url(#lc-hand)")}
-        {hand(s * 6, 38, 0.7, "#e5342f", 11)}
-      </g>
-
-      <circle cx="50" cy="50" r="2.2" fill="url(#lc-ball)" />
+      {/* hands */}
+      {hand(h * 30, 21, 2.1, "var(--clock-hand)")}
+      {hand(m * 6, 30, 1.9, "var(--clock-hand)")}
+      <line
+        x1={polar(s * 6, -14).x}
+        y1={polar(s * 6, -14).y}
+        x2={polar(s * 6, 30).x}
+        y2={polar(s * 6, 30).y}
+        stroke="#e5342f"
+        strokeWidth="0.7"
+        strokeLinecap="round"
+      />
+      <circle cx="50" cy="50" r="1.4" fill="var(--clock-hand)" />
     </svg>
   );
 }
