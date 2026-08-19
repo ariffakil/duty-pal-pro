@@ -440,12 +440,20 @@ function Index() {
                   {clockedOut ? "Closed" : clockInAt ? "On duty" : "Active"}
                 </span>
                 <button
+                  onClick={toggleTheme}
+                  className="flex h-9 w-9 items-center justify-center rounded-xl border border-primary/20 bg-secondary/40"
+                  aria-label={theme === "dark" ? "Switch to white mode" : "Switch to black mode"}
+                >
+                  {theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+                </button>
+                <button
                   className="relative flex h-9 w-9 items-center justify-center rounded-xl border border-primary/20 bg-secondary/40"
                   aria-label="Notifications"
                 >
                   <Bell className="h-4 w-4" />
                   <span className="absolute right-2 top-2 h-1.5 w-1.5 rounded-full bg-accent" />
                 </button>
+
               </header>
 
 
