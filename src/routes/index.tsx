@@ -68,7 +68,9 @@ const fmt = (d: Date) =>
 type Stage = "idle" | "scanning" | "failed" | "verified" | "day" | "summary" | "period";
 
 function Index() {
+  const { theme, toggle: toggleTheme } = useTheme();
   const [stage, setStage] = useState<Stage>("idle");
+
   const [progress, setProgress] = useState(0);
   const [clockInAt, setClockInAt] = useState<Date | null>(null);
   const [clockedOut, setClockedOut] = useState(false);
