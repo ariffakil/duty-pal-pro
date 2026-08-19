@@ -263,6 +263,12 @@ function Index() {
   );
 
 
+  const tomorrowDate = useMemo(() => {
+    const d = now ? new Date(now) : new Date();
+    d.setDate(d.getDate() + 1);
+    return d;
+  }, [now]);
+
   const clockOutAt = useMemo(
     () => (clockInAt ? new Date(clockInAt.getTime() + SHIFT_HOURS * 3600_000) : null),
     [clockInAt],
