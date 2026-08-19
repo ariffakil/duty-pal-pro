@@ -54,29 +54,13 @@ export function LiveClock({ size = 92 }: Props) {
       aria-hidden="true"
       style={{ overflow: "visible" }}
     >
-      <defs>
-        <filter id="lc-soft" x="-40%" y="-40%" width="180%" height="180%">
-          <feDropShadow
-            dx="2.5"
-            dy="3"
-            stdDeviation="3"
-            floodColor="var(--clock-shadow-dark)"
-          />
-          <feDropShadow
-            dx="-2.5"
-            dy="-3"
-            stdDeviation="3"
-            floodColor="var(--clock-shadow-light)"
-          />
-        </filter>
-      </defs>
-
       {/* outer soft plate */}
-      <circle cx="50" cy="50" r="48" fill="var(--clock-ring)" filter="url(#lc-soft)" />
+      <circle cx="50" cy="50" r="48" fill="var(--clock-ring)" />
       {/* main dial */}
-      <circle cx="50" cy="50" r="40.5" fill="var(--clock-face)" filter="url(#lc-soft)" />
+      <circle cx="50" cy="50" r="40.5" fill="var(--clock-face)" />
       {/* inner disc */}
-      <circle cx="50" cy="50" r="21" fill="var(--clock-inner)" filter="url(#lc-soft)" />
+      <circle cx="50" cy="50" r="21" fill="var(--clock-inner)" />
+
 
       {/* four bold marks at 12 / 3 / 6 / 9 */}
       {[0, 90, 180, 270].map((a) => {
