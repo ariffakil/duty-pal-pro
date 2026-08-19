@@ -90,25 +90,25 @@ export function LiveClock({ size = 92 }: Props) {
             x2={p2.x}
             y2={p2.y}
             stroke="var(--clock-mark)"
-            strokeWidth="2.6"
+            strokeWidth="1.2"
             strokeLinecap="butt"
           />
         );
       })}
 
       {/* hands */}
-      {hand(h * 30, 21, 2.1, "var(--clock-hand)")}
-      {hand(m * 6, 30, 1.9, "var(--clock-hand)")}
+      {hand(h * 30, 21, 1.1, "var(--clock-hand)")}
+      {hand(m * 6, 30, 0.9, "var(--clock-hand)")}
       <line
         x1={polar(s * 6, -14).x}
         y1={polar(s * 6, -14).y}
         x2={polar(s * 6, 30).x}
         y2={polar(s * 6, 30).y}
         stroke="#e5342f"
-        strokeWidth="0.7"
+        strokeWidth="0.45"
         strokeLinecap="round"
       />
-      <circle cx="50" cy="50" r="1.4" fill="var(--clock-hand)" />
+      <circle cx="50" cy="50" r="1" fill="var(--clock-hand)" />
     </svg>
   );
 }
